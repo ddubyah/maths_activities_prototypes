@@ -1,0 +1,80 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Math Notation Primer</title>
+		<meta name="description" content="">
+		<meta name="viewport" content="width=device-width">
+		<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+		<link rel="stylesheet" href="/styles/main.css">
+		<!-- build:js scripts/vendor/modernizr.js -->
+		<script src="/components/modernizr/modernizr.js"></script>
+		<!-- endbuild -->
+	</head>
+  <body>
+  	<section class="container">
+  		<div class="row-fluid">
+        <h1>Math Notation Primer <small>using MathJax and hope</small></h1>
+        <p class="lead">The first problem we need to crack is the proper display of mathematic and scientific notations.</p>
+
+        <h2>MathJax for Inline Statements</h2>
+        <p>This is how the equation for a straight line may be written in 'normal' html: y = mx + c. This is how it displays with MathJax using TeX notation: \( y = mx + c \). Can you see the difference?</p>
+
+        <p>How about this?</p>
+        <aside class="well">$$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$$</aside>
+
+        <p>Here are some examples:</p>
+        <ul class="thumbnails">
+          <li class="span4">
+            <article class="thumbnail">
+              <figure class="maths-figure">
+                $$x = {-b \pm \sqrt{b^2-4ac} \over 2a}$$
+              </figure>
+              <figcaption>Quadratics</figcaption>
+            </article>
+          </li>
+
+          <li class="span4">
+            <article class="thumbnail">
+              <figure class="maths-figure">
+                $$y = mx + c$$
+              </figure>
+              <figcaption>Straight Lines</figcaption>
+            </article>
+          </li>
+
+          <li class="span4">
+            <article class="thumbnail">
+              <figure class="maths-figure">
+                $$ {a \over b} = {c \over d} \times 24 $$
+              </figure>
+              <figcaption>Whatever this is</figcaption>
+            </article>
+          </li>
+        </ul>
+
+      </div>
+  	</section>
+
+    <!--[if lt IE 7]>
+        <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+    <![endif]-->
+
+    <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+    <script>
+    	var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+    	(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+    	g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+    	s.parentNode.insertBefore(g,s)}(document,'script'));
+    </script>
+
+    <!-- build:js scripts/main.js -->
+    <!-- <script data-main="scripts/main" src="components/requirejs/require.js"></script> -->
+    <!-- endbuild -->
+    <script src="https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+	</body>
+</html>

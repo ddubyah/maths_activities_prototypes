@@ -1,7 +1,37 @@
 @import 'sass-bootstrap/lib/bootstrap';
 @import 'sass-bootstrap/lib/responsive';
 
-.hero-unit {
-    margin: 50px auto 0 auto;
-    width: 300px;
+
+@import url('http://fonts.googleapis.com/css?family=Reenie+Beanie');
+
+// .hero-unit {
+//     margin: 50px auto 0 auto;
+//     width: 300px;
+// }
+
+body {
+	background-image: url(/images/graphy/graphy.png);
+}
+
+figure {
+	font-weight: bold;
+	text-shadow: 2px 2px 3px #a3a3a3;
+    filter: dropshadow(color=#a3a3a3, offx=2, offy=2);
+    min-height: 80px;
+    padding-top: 2em;
+}
+
+figcaption {
+	text-align: center;
+	font-style: italic;
+	background-color: #fff;
+	border-top: 1px dashed #bbb; 
+    font-family: 'Reenie Beanie', cursive;
+    font-size: 1.5em;
+    padding: 0.4em;
+
+}
+
+article.thumbnail {
+    vertical-align: center;
 }
