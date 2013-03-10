@@ -17,8 +17,24 @@
 	</head>
   <body>
   	<section class="container">
-  		<h1>d3.js 1</h1>
-  	</section>
+      <h1>d3.js 1</h1>
+      <div class="row">
+        <article class="span6">
+          <figure id="fig1"></figure>
+          <figcaption>Simple bar chart</figcaption>
+        </article>      
+      </div>
+
+      <div class="row">
+        <article class="span">
+          <figure id="fig2"></figure>
+          <figcaption id="fig2label">Triangles
+            <label class="tri1">Set 1</label>
+            <label class="tri2">Set 2</label>
+          </figcaption>
+        </article>
+      </div>
+    </section>
 
     <!--[if lt IE 7]>
         <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
@@ -36,6 +52,7 @@
     <!-- <script data-main="scripts/main" src="components/requirejs/require.js"></script> -->
     <!-- endbuild -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.0.1/d3.v3.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="/scripts/experiments/d3js.js"></script>
 	</body>
 </html>

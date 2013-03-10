@@ -1,7 +1,8 @@
 @import 'sass-bootstrap/lib/bootstrap';
 @import 'sass-bootstrap/lib/responsive';
 
-
+$fills: #7ECEFD;
+$strokes: #2185C5;
 @import url('http://fonts.googleapis.com/css?family=Reenie+Beanie');
 
 // .hero-unit {
@@ -29,10 +30,47 @@ figcaption {
     font-family: 'Reenie Beanie', cursive;
     font-size: 1.5em;
     padding: 0.4em;
+    vertical-align: center;
+}
+.one-edge-shadow {
 
 }
 
-article.thumbnail {
+article {
     // background-color: #ddd;
-    vertical-align: center;
+    background-image: url(/images/debut_light/debut_light.png)
+}
+
+.chart rect{
+	fill: $fills;
+	stroke: $strokes;
+}
+
+.joins {
+	opacity: 1;
+}
+
+.chart .point, .chart path{
+	fill: white;
+	stroke: $strokes;
+	stroke-width: 2px;
+	opacity: 1;
+}
+
+
+.label{
+	fill: #999;
+	font-family: 'Reenie Beanie', cursive;
+	font-size: 1.5em;
+}
+
+.point:hover {
+	fill: $strokes;
+	r: 2em;
+}
+
+.axis line, .axis path {
+	fill: none;
+	stroke: $strokes;
+	shape-rendering: 'crisp-edges';
 }

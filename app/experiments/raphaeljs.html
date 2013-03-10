@@ -6,9 +6,9 @@
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-		<title></title>
+		<title>Raphael.js</title>
 		<meta name="description" content="">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="viewport" content="width=device-width">
 		<!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 		<link rel="stylesheet" href="/styles/main.css">
 		<!-- build:js scripts/vendor/modernizr.js -->
@@ -17,20 +17,14 @@
 	</head>
   <body>
   	<section class="container">
-      <section class="row-fluid">
-        <h1>Experiments in Maths <small>insert disclaimer here</small></h1>
+      <h1>Raphael.js 1</h1>
+      <div class="row">
+        <article class="span6">
+          <figure id="fig1"></figure>
+          <figcaption>Triangles</figcaption>
+        </article>      
+      </div>
 
-        <nav class="well span6">
-          <ul class="nav nav-list">
-            <li class="nav-header">JS Drawing and Visualisations</li>
-            <li><a href="d3js.html" class="link">d3.js</a></li>
-            <li><a href="raphaeljs.html" class="link">Raphael.js</a></li>
-            <li class="nav-header">MathJax and Notation</li>
-            <li><a href="math-notation1.html">Simple Notation</a></li>
-          </ul>
-        </nav>
-      </section>
-  	</section>
 
     <!--[if lt IE 7]>
         <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
@@ -47,5 +41,8 @@
     <!-- build:js scripts/main.js -->
     <!-- <script data-main="scripts/main" src="components/requirejs/require.js"></script> -->
     <!-- endbuild -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+    <script src="/scripts/experiments/raphael.js"></script>
 	</body>
 </html>
