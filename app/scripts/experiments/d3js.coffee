@@ -144,11 +144,11 @@ jQuery ->
 		yAxis.scale yScale
 		gxAxis.transition()
 			.duration(500)
-			.ease('elastic')
+			.ease('linear')
 			.call xAxis
 		gyAxis.transition()
 			.duration(500)
-			.ease('elastic').call yAxis
+			.ease('linear').call yAxis
 		console.log "updating"	
 		circles.data(data)
 			.enter().append('circle')
