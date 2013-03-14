@@ -44,6 +44,10 @@ module.exports = function (grunt) {
                     '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,webp}'
                 ],
                 tasks: ['livereload']
+            },
+            handlebars: {
+                files: ['<%= yeoman.app %>/scripts/**/*.hbs'],
+                tasks: ['handlebars', 'livereload']
             }
         },
         connect: {
@@ -245,6 +249,21 @@ module.exports = function (grunt) {
             all: {
                 rjsConfig: '<%= yeoman.app %>/scripts/main.js'
             }
+        },
+        handlebars: {
+            compile: {
+                options: {
+                    namespace: false,
+                    amd: true
+                },
+                files:[{
+                    expand: true,
+                    cwd: '<%= yeoman.app %>/scripts',
+                    src: '**/*.hbs',
+                    dest: '.tmp/scripts',
+                    ext: '.js'
+                }]
+            }
         }
     });
 
@@ -261,6 +280,7 @@ module.exports = function (grunt) {
             'compass:server',
             'livereload-start',
             'connect:livereload',
+            'handlebars',
             'open',
             'watch'
         ]);
@@ -269,6 +289,7 @@ module.exports = function (grunt) {
     grunt.registerTask('test', [
         'clean:server',
         'coffee',
+        'handlebars',
         'compass',
         'connect:test',
         'mocha'
@@ -277,6 +298,7 @@ module.exports = function (grunt) {
     grunt.registerTask('build', [
         'clean:dist',
         'coffee',
+        'handlebars',
         'compass:dist',
         'useminPrepare',
         'requirejs',
