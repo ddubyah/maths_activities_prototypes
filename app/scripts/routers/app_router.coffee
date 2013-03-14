@@ -2,7 +2,8 @@ define [
 	"jquery"
 	"backbone"
 	"app"
-	], ($, Backbone, AppView)->
+	"../views/experiments/d3"
+	], ($, Backbone, AppView, d3View)->
 
 	class AppRouter extends Backbone.Router
 		@initialize: ->
@@ -11,7 +12,11 @@ define [
 
 		routes: {
 			"": "index"
+			"experiments/d3": "d3"
+
+
 			"*path": "index"
+
 		}
 
 		index: ->
@@ -20,5 +25,9 @@ define [
 
 		start: ->
 			Backbone.history.start({ pushState: false })
+
+		d3: ->
+			d3 = new d3View { el: $('#app') }
+			d3.render()
 
 	return AppRouter

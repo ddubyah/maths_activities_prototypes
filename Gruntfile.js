@@ -25,7 +25,7 @@ module.exports = function (grunt) {
         yeoman: yeomanConfig,
         watch: {
             coffee: {
-                files: ['<%= yeoman.app %>/scripts/{,*/}*.coffee'],
+                files: ['<%= yeoman.app %>/scripts/**/*.coffee'],
                 tasks: ['coffee:dist']
             },
             coffeeTest: {
@@ -62,8 +62,7 @@ module.exports = function (grunt) {
                         return [
                             lrSnippet,
                             mountFolder(connect, '.tmp'),
-                            mountFolder(connect, 'app')
-                        ];
+                            mountFolder(connect, 'app')                        ];
                     }
                 }
             },
@@ -111,7 +110,7 @@ module.exports = function (grunt) {
             all: {
                 options: {
                     run: true,
-                    urls: ['http://localhost:<%= connect.options.port %>/index.html']
+                    urls: ['http://localhost:<%= connect.options.port %>/index.html'],
                 }
             }
         },
@@ -130,9 +129,10 @@ module.exports = function (grunt) {
             test: {
                 files: [{
                     expand: true,
-                    cwd: '.tmp/spec',
+                    cwd: 'test/spec',
                     src: '*.coffee',
-                    dest: 'test/spec'
+                    dest: '.tmp/spec',
+                    ext: '.js'
                 }]
             }
         },
@@ -281,7 +281,6 @@ module.exports = function (grunt) {
             'livereload-start',
             'connect:livereload',
             'handlebars',
-            'open',
             'watch'
         ]);
     });

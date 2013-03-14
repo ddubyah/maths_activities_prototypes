@@ -5,6 +5,7 @@ require.config
 		bootstrap: "vendor/bootstrap"
 		underscore: "../components/underscore/underscore-min"
 		backbone: "../components/backbone/backbone"
+		d3: "../components/d3/d3.min"
 
 	shim:
 		bootstrap:
@@ -17,6 +18,9 @@ require.config
 		backbone:
 			deps: ["underscore"]
 			exports: "Backbone"
+
+		d3:
+			exports: "d3"
 
 require ["jquery", "routers/app_router"], ($, AppRouter) ->
 	"use strict"
