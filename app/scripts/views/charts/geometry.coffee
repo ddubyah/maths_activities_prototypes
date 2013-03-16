@@ -10,19 +10,17 @@ define [
 
 		# defaults for stage size
 		_padding: 30
-		_width: 640
-		_height: 480
 		
 		initialize: ->
 			console.log "initializing geo"
-			@stage = @_makeStage()
+			@pointsGroup = @_makeGroup 'points'
 			window.d3 = D3
 
 		render: ->
-			@_drawPoints()
+			@_drawPoints(@pointsGroup)
 			this
 
-		rescale: ->
+		calculateScales: ->
 			# set element scale
 			# @$el.attr 'width', @_width
 			# @$el.attr 'height', @_height
@@ -34,23 +32,9 @@ define [
 			@xScale @_makeScale [0, xMax], [0, 500]
 			@yScale @_makeScale [0, yMax], [0, 400]
 
-		stageSize: (dx, dy, padding)->
-			return [ @_width, @_height, @_padding ] unless arguments.length
-			@_width = dx if dx?
-			@_height = dy if dy?
-			@_padding = padding if padding?
-
 		padding: (dx)->
 			return @_padding unless arguments.length
 			@_padding = dx
-
-		stageWidth: (dx)->
-			return @_width unless arguments.length
-			@_width = dx
-		
-		stageHeight: (dy)->
-			return @_height unless arguments.length
-			@_height = dy
 
 		xScale: (aScale)->
 			return @_xScale unless arguments.length 
@@ -60,18 +44,14 @@ define [
 			return @_yScale unless arguments.length 
 			@_yScale = aScale
 
-		_makeStage: ->
-			stage = d3.select(@el)
+		_makeGroup: (className)->
+			group = d3.select(@el)
 				.append('g')
 					.attr({
-						# class: 'chart'
-						# height: 400
-						# width: 500
+						class: className
+						# transform: "translate(#{@_padding}, #{@_padding})"
 					})
-					# .append('g').attr {
-					# 	# transform: "translate(#{@_padding}, #{@_padding})"
-					# }
-			stage
+			group
 
 
 		_makeScale: (domain, range)->
@@ -81,12 +61,12 @@ define [
 				.range(range)
 				.nice()
 
-		_drawPoints: ->
+		_drawPoints: (target=(D3.select(@el)))->
 			xscale = @_xScale
 			yscale = @_yScale
 
-			circles = @stage.selectAll('circle')
-				.data(@collection.models)
+			circles = target.selectAll('circle')
+					.data(@collection.models)
 
 			circles.enter()
 				.append('circle')

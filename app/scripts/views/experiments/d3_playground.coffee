@@ -8,7 +8,7 @@ define [
 	class D3Playground extends Backbone.View
 		initialize: ->
 			@sampleGeometry = @_makeGeo()
-			@geoView = new ChartViews.Geometry collection: @sampleGeometry
+			@geoView = new ChartViews.Geometry collection: @sampleGeometry, className: 'chart'
 			
 		render: ->
 			console.log "Rendering"
@@ -26,7 +26,7 @@ define [
 			figureElement.empty()
 			figureElement.append @geoView.el
 
-			@geoView.rescale()
+			@geoView.calculateScales()
 			@geoView.render()
 
 		_makeGeo: ->
