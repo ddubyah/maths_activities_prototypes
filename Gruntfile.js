@@ -281,6 +281,7 @@ module.exports = function (grunt) {
             'livereload-start',
             'connect:livereload',
             'handlebars',
+            'open',
             'watch'
         ]);
     });

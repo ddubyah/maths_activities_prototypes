@@ -4,7 +4,7 @@ define [
 	'd3'
 	'models/charts/point'
 	'models/charts/geometry'
-	'views/templates/experiments/d3'
+	'templates/experiments/d3'
 ], ($, Backbone, d3, Point, Geometry, d3Template)->
 
 	class D3View extends Backbone.View
@@ -96,8 +96,8 @@ define [
 				.append('svg')
 					.attr({
 						class: 'chart'
-						height: 400
-						width: 500
+						# height: 400
+						# width: 500
 					})
 					.append('g').attr {
 						transform: "translate(#{@_padding}, #{@_padding})"

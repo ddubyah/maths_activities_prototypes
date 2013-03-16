@@ -1,7 +1,7 @@
 
 define [
 	'backbone'
-	'views/templates/index'
+	'templates/index'
 	], (Backbone, indextemplate)->
     'use strict'
 
@@ -16,7 +16,7 @@ define [
     		console?.log "Rendering the app"
     		@$el.html indextemplate {
     			links: [
-    				{ name: "Experiments in d3", link: "experiments/d3", local: true	}
+    				{ name: "Experiments in d3", link: "experiments/d3playground", local: true	}
     			]
     		}
 
