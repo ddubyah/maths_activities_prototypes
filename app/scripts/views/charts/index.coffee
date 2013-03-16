@@ -1,8 +1,10 @@
 define [
 	'./geometry'
+	'./geometry_svg'
 	'./svg_canvas'
-],(GeometryView, SVGCanvasView)->
+],(Geometry, GeometrySVGView, SVGCanvasView)->
 	{
+		Geometry: Geometry
 		SVGCanvas: SVGCanvasView
-		Geometry: GeometryView
+		GeometrySVG: GeometrySVGView
 	}

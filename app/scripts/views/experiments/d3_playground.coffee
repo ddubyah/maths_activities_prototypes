@@ -6,30 +6,32 @@ define [
 ], (Backbone, ChartModels, ChartViews, PlaygroundTemplate)->
 
 	class D3Playground extends Backbone.View
+		template: PlaygroundTemplate
+
 		initialize: ->
 			$(window).resize (e)->
 				console.log "Resized!"
 			@sampleGeometry = @_makeGeo()
-			@geoView = new ChartViews.Geometry collection: @sampleGeometry, className: 'chart'
+			@geometrySvg = new ChartViews.GeometrySVG collection: @sampleGeometry, className: 'chart'
+			@geometryControls = new ChartViews.Geometry collection: @sampleGeometry, className: 'controls'
 			
 		render: ->
 			console.log "Rendering"
-			@$el.html PlaygroundTemplate { title: 'D3 Playground' }
-			@_createGeometryView()			
+			@$el.html @template { title: 'D3 Playground' }
+			@_renderDiagram()			
+			@_renderControls()
 
-		_createGeometryView: ->
-			dx = @$el.width()
-			dy = Math.round((dx/4) * 3)
-			# console.log "dx.dy -> %d.%d", dx, dy
-			# @geoView.$el.attr 'width', dx
-			# @geoView.$el.attr 'height', dy
-
+		_renderDiagram: ->
 			figureElement = @$el.find('figure').first()
 			figureElement.empty()
-			figureElement.append @geoView.el
+			figureElement.append @geometrySvg.el
 
-			@geoView.calculateScales()
-			@geoView.render()
+			@geometrySvg.calculateScales()
+			@geometrySvg.render()
+
+		_renderControls: ->
+			@$el.find('#controls').html(@geometryControls.$el)
+			@geometryControls.render()
 
 		_makeGeo: ->
 			geo = new ChartModels.Geometry [
