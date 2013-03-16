@@ -54,11 +54,17 @@ article {
 	opacity: 1;
 }
 
-.chart .point, .chart path{
+.chart .point{
 	fill: white;
 	stroke: $strokes;
 	stroke-width: 2px;
 	opacity: 1;
+}
+
+.chart path.shape {
+	stroke: $strokes;
+	fill: $fills;
+	opacity: 0.2;
 }
 
 

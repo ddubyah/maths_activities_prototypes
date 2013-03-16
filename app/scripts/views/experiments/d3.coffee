@@ -29,7 +29,7 @@ define [
 			@_updateScales() if @collection.length
 		
 		render: ->
-			# @_drawLine()
+			@_drawLine()
 			@_drawPoints()
 			return this
 

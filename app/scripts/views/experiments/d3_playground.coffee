@@ -7,6 +7,8 @@ define [
 
 	class D3Playground extends Backbone.View
 		initialize: ->
+			$(window).resize (e)->
+				console.log "Resized!"
 			@sampleGeometry = @_makeGeo()
 			@geoView = new ChartViews.Geometry collection: @sampleGeometry, className: 'chart'
 			
@@ -31,9 +33,9 @@ define [
 
 		_makeGeo: ->
 			geo = new ChartModels.Geometry [
-				{ x: 0, y: 0 }
-				{ x: 50, y: 20 }
-				{ x: 20, y: 50 }
+				{ x: -20, y: 0 }
+				{ x: 50, y: 30 }
+				{ x: 20, y: 10 }
 			]
 			geo
 

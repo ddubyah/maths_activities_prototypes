@@ -13,24 +13,48 @@ define [
 		
 		initialize: ->
 			console.log "initializing geo"
-			@pointsGroup = @_makeGroup 'points'
+			@lineGroup = @_makePaddedGroup 'line'
+			@pointsGroup = @_makePaddedGroup 'points'
+
 			window.d3 = D3
 
 		render: ->
+			@_setCanvasHeightByXScale()
+			@calculateScales()
 			@_drawPoints(@pointsGroup)
+			@_drawLine(@lineGroup)
 			this
 
 		calculateScales: ->
-			# set element scale
-			# @$el.attr 'width', @_width
-			# @$el.attr 'height', @_height
-			xMax = D3.max @collection.models, (d)->
-				d.get 'x'
-			yMax = D3.max @collection.models, (d)->
-				d.get 'y'
+			paddedWidth = @$el.width() - (@_padding * 2)
+			paddedHeight = @$el.height() - (@_padding * 2)
 
-			@xScale @_makeScale [0, xMax], [0, 500]
-			@yScale @_makeScale [0, yMax], [0, 400]
+			xMax = @getMaxModelProperty 'x'
+			yMax = @getMaxModelProperty 'y'
+
+			xMin = @getMinModelProperty 'x', 0
+			yMin = @getMinModelProperty 'y', 0
+
+			# make minimums at least 0
+			xMin = D3.min [xMin, 0]
+			yMin = D3.min [yMin, 0]
+			
+			@xScale @_makeScale [xMin, xMax], [0, paddedWidth]
+			@yScale @_makeScale [yMin, yMax], [0, paddedHeight]
+
+		getMaxModelProperty: (modelProperty)->
+			max = D3.max @collection.models, (d)->
+				d.get modelProperty
+			max
+
+		getMinModelProperty: (modelProperty, ensureZero)->
+			min = D3.min @collection.models, (d)->
+				d.get modelProperty
+
+			if ensureZero
+				console.log "Forcing minimum"
+				min = D3.min [min, 0]
+			min
 
 		padding: (dx)->
 			return @_padding unless arguments.length
@@ -44,12 +68,23 @@ define [
 			return @_yScale unless arguments.length 
 			@_yScale = aScale
 
-		_makeGroup: (className)->
+		_setCanvasHeightByXScale: ->
+			availableWidth = @$el.width()
+			xMax = @getMaxModelProperty 'x'
+			yMax = @getMaxModelProperty 'y'
+			xMin = @getMinModelProperty 'x', true
+			yMin = @getMinModelProperty 'y', true
+
+			xScale = @_makeScale [0, xMax], [0, availableWidth]
+			dy = xScale yMax
+			@$el.height dy
+
+		_makePaddedGroup: (className)->
 			group = d3.select(@el)
 				.append('g')
 					.attr({
 						class: className
-						# transform: "translate(#{@_padding}, #{@_padding})"
+						transform: "translate(#{@_padding}, #{@_padding})"
 					})
 			group
 
@@ -86,14 +121,31 @@ define [
 						class: 'point'
 					})
 
-		_drawLine: ->
-			line = @_line
-			@chart.append('g')
+		_drawLine: (target=(D3.select(@el)))->
+			lineBuilder = @_makeLine()
+			path = target
 				.data([@collection.models])
 			.append('svg:path')
+
+			path.transition()
+				.duration(500)
+				.ease('elastic')
 				.attr({
+					class: 'shape'
 					d: (d)->
-						line d
+						lineBuilder(d)
 					})
 
+		_makeLine: (lineGroup)->
+			xscale = @_xScale
+			yscale = @_yScale
+			line = d3.svg.line()
+			line.x (d)->
+					xscale d.get('x')
+
+			line.y (d)->
+					yscale d.get('y')
+
+			line.interpolate "linear-closed"
+			line
 	return Geometry
