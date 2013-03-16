@@ -35,9 +35,9 @@ define [
 
 		_makeGeo: ->
 			geo = new ChartModels.Geometry [
-				{ x: -20, y: 0 }
-				{ x: 50, y: 30 }
-				{ x: 20, y: 10 }
+				{ label: 'a', x: -20, y: 0 }
+				{ label: 'b', x: 50, y: 30 }
+				{ label: 'c', x: 0, y: 10 }
 			]
 			geo
 

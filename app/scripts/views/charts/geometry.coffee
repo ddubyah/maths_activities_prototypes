@@ -1,15 +1,12 @@
 define [
 	'backbone'
-	'templates/charts/geometry_details'
 	'templates/charts/point_details'
-], (Backbone, GeometryDetailsTemp, PointTemp)->
+], (Backbone, PointTemp)->
 
 	class GeometryView extends Backbone.View
 		tagName: 'ul'
-		template: GeometryDetailsTemp
 
 		initialize: ->
-			@$el.html @template()
 
 		render: ->
 			for point in @collection.models

@@ -74,13 +74,18 @@ article {
 	font-size: 1.5em;
 }
 
-.point:hover {
+svg .point:hover {
 	fill: $strokes;
 	r: 2em;
 }
 
-.axis line, .axis path {
+svg .axis line, svg .axis path {
 	fill: none;
 	stroke: $strokes;
 	shape-rendering: 'crisp-edges';
+}
+
+#controls li{
+	font-size: 2em;
+	line-height: 1.2em;
 }
