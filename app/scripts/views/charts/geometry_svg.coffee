@@ -21,8 +21,8 @@ define [
 			@listenTo @collection, 'change', @render
 
 		render: ->
-			@_setCanvasHeightByXScale()
 			@calculateScales()
+			@_setCanvasHeightByXScale()
 			@_drawPoints(@pointsGroup)
 			@_drawLine(@lineGroup)
 			this
@@ -30,6 +30,8 @@ define [
 		calculateScales: ->
 			paddedWidth = @$el.width() - (@_padding * 2)
 			paddedHeight = @$el.height() - (@_padding * 2)
+
+			# paddedHeight = paddedWidth if paddedHeight > paddedWidth
 
 			xMax = @getMaxModelProperty 'x'
 			yMax = @getMaxModelProperty 'y'
@@ -42,7 +44,9 @@ define [
 			yMin = D3.min [yMin, 0]
 			
 			@xScale @_makeScale [xMin, xMax], [0, paddedWidth]
-			@yScale @_makeScale [yMax, yMin], [0, paddedHeight]
+			@yScale @_makeScale [yMax, yMin], [0, paddedWidth]
+			window.xScale = @xScale()
+			window.yScale = @yScale()
 
 		getMaxModelProperty: (modelProperty)->
 			max = D3.max @collection.models, (d)->
@@ -77,8 +81,11 @@ define [
 			xMin = @getMinModelProperty 'x', true
 			yMin = @getMinModelProperty 'y', true
 
-			xScale = @_makeScale [0, xMax], [0, availableWidth]
-			dy = xScale yMax
+			scale = @_makeScale [yMin, yMax], [0, availableWidth]
+
+			window.scale = scale
+			dy = scale(yMax)
+			console.log "Setting height to %d", dy
 			@$el.height dy
 
 		_makePaddedGroup: (className)->
@@ -92,7 +99,7 @@ define [
 
 
 		_makeScale: (domain, range)->
-			console.log "Making scale for %s -> %s", domain, range
+			console.log "Making scale for %s -> %s", domain.toString(), range.toString()
 			D3.scale.linear()
 				.domain(domain)
 				.range(range)
