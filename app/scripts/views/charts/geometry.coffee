@@ -17,22 +17,32 @@ define [
 				pointView = new PointView model: point, className: 'pointView', tagName: 'li'
 				@listenTo pointView, 'selected', @_editPoint
 				@$el.append pointView.render().$el
+				console.log @collection.toJSON()
 			return this
 
 		_editPoint: (pointView)->
 			console.log "Editing "+ pointView.model.get 'label'
+			@_resetViews()
+			
+			@_selectedView = pointView
+			@stopListening pointView, 'selected'
+				
+			@_editView = new PointEditView {
+				model: pointView.model
+				el: pointView.el
+				tagName: 'li'
+			}
+			@listenTo @_editView, 'update', @_resetViews
+			@_editView.render()
+
+		_resetViews: ()->
+			if @_editView
+				@stopListening @_editView 
+				delete @_editView
 			if @_selectedView?
 				@_selectedView.render()
 				@listenTo @_selectedView, 'selected', @_editPoint
 				delete @_selectedView
-			
-			@_selectedView = pointView
-			@stopListening pointView, 'selected'
-			@_toggleEditView pointView.model, pointView.el
-				
 
-		_toggleEditView: (point, target)->
-			@_editView = new PointEditView model: point, el: target, tagName: 'li'
-			@_editView.render()
 
 	return GeometryView

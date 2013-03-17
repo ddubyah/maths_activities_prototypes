@@ -25,9 +25,10 @@ define [
 
 			@model.set 'x', newX if @_validateDigits newX
 			@model.set 'y', newY if @_validateDigits newY
+			@trigger 'update', this
 
 		_validateDigits: (input)->
-			r = /^\d+$/
+			r = /^-?\d+$/
 			r.test input
 
 	PointEditView

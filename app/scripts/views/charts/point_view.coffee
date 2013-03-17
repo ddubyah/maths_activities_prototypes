@@ -7,7 +7,7 @@ define [
 		template: PointDetailsTemp
 
 		events: 
-			'dblclick': 'selected'
+			'click': 'selected'
 		
 		initialize: ->
 			@listenTo @model, 'change', @render
