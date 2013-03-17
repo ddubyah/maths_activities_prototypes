@@ -6,17 +6,19 @@ define [
 ], (Backbone, D3, SVGCanvasView, ChartModels)->
 
 	class GeometrySVG extends SVGCanvasView
+
 		tagName: 'svg'
+		transitionDuration: 500
+		transitionEase: 'elastic'
 
 		# defaults for stage size
 		_padding: 30
 		
 		initialize: ->
-			console.log "initializing geo"
-			@lineGroup = @_makePaddedGroup 'line'
+			@lineGroup = @_makePaddedGroup('line')
 			@pointsGroup = @_makePaddedGroup 'points'
-
-			window.d3 = D3
+			# @line = @_makeLine @lineGroup
+			@listenTo @collection, 'change', @render
 
 		render: ->
 			@_setCanvasHeightByXScale()
@@ -40,7 +42,7 @@ define [
 			yMin = D3.min [yMin, 0]
 			
 			@xScale @_makeScale [xMin, xMax], [0, paddedWidth]
-			@yScale @_makeScale [yMin, yMax], [0, paddedHeight]
+			@yScale @_makeScale [yMax, yMin], [0, paddedHeight]
 
 		getMaxModelProperty: (modelProperty)->
 			max = D3.max @collection.models, (d)->
@@ -122,30 +124,39 @@ define [
 					})
 
 		_drawLine: (target=(D3.select(@el)))->
-			lineBuilder = @_makeLine()
-			path = target
-				.data([@collection.models])
-			.append('svg:path')
+			lineBuilder = @_makeLineBuilder()
+			path = target.selectAll('path').data([@collection.models])
+
+			path.enter()
+				.append('svg:path')
+				.attr({
+					class: 'shape'
+					# d: (d)->
+					# 	lineBuilder(d)
+					})
 
 			path.transition()
 				.duration(500)
 				.ease('elastic')
-				.attr({
-					class: 'shape'
+				.attr {
 					d: (d)->
 						lineBuilder(d)
-					})
+				}
 
-		_makeLine: (lineGroup)->
+
+
+		_makeLineBuilder: ()->
 			xscale = @_xScale
 			yscale = @_yScale
-			line = d3.svg.line()
-			line.x (d)->
+
+			lineBuilder = d3.svg.line()
+			lineBuilder.x (d)->
 					xscale d.get('x')
 
-			line.y (d)->
+			lineBuilder.y (d)->
 					yscale d.get('y')
 
-			line.interpolate "linear-closed"
-			line
+			lineBuilder.interpolate "linear-closed"
+
+			lineBuilder
 	return GeometrySVG

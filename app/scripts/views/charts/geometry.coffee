@@ -1,7 +1,7 @@
 define [
 	'backbone'
-	'templates/charts/point_details'
-], (Backbone, PointTemp)->
+	'views/charts/point_view'
+], (Backbone, PointView)->
 
 	class GeometryView extends Backbone.View
 		tagName: 'ul'
@@ -10,7 +10,8 @@ define [
 
 		render: ->
 			for point in @collection.models
-				console.log "Rendering point "+ point.toJSON()
-				@$el.append PointTemp point.toJSON()
+				pointView = new PointView model: point
+				@$el.append pointView.render().$el
+			return this
 
 	return GeometryView

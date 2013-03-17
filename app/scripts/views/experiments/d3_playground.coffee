@@ -12,6 +12,7 @@ define [
 			$(window).resize (e)->
 				console.log "Resized!"
 			@sampleGeometry = @_makeGeo()
+			window.geometry = @sampleGeometry
 			@geometrySvg = new ChartViews.GeometrySVG collection: @sampleGeometry, className: 'chart'
 			@geometryControls = new ChartViews.Geometry collection: @sampleGeometry, className: 'controls'
 			
@@ -36,8 +37,8 @@ define [
 		_makeGeo: ->
 			geo = new ChartModels.Geometry [
 				{ label: 'a', x: -20, y: 0 }
-				{ label: 'b', x: 50, y: 30 }
-				{ label: 'c', x: 0, y: 10 }
+				{ label: 'b', x: 60, y: 40 }
+				{ label: 'c', x: 0, y: 60 }
 			]
 			geo
 
