@@ -54,27 +54,42 @@ article {
 	opacity: 1;
 }
 
-.chart .point, .chart path{
+.chart .point{
 	fill: white;
 	stroke: $strokes;
 	stroke-width: 2px;
 	opacity: 1;
 }
 
-
-.label{
-	fill: #999;
-	font-family: 'Reenie Beanie', cursive;
-	font-size: 1.5em;
+.chart path.shape {
+	stroke: $strokes;
+	fill: $fills;
+	fill-opacity: 0.2;
 }
 
-.point:hover {
+
+.label{
+	fill: #000;
+	font-family: 'Reenie Beanie', cursive;
+	font-size: 1.3em;
+}
+
+svg .point:hover {
 	fill: $strokes;
 	r: 2em;
 }
 
-.axis line, .axis path {
+svg .axis line, svg .axis path {
 	fill: none;
 	stroke: $strokes;
 	shape-rendering: 'crisp-edges';
+}
+
+#controls li{
+	font-size: 2em;
+	line-height: 1.2em;
+}
+
+ul.pointList li{
+	list-style: none
 }

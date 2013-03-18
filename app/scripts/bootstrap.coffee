@@ -5,6 +5,7 @@ require.config
 		bootstrap: "vendor/bootstrap"
 		underscore: "../components/underscore/underscore-min"
 		backbone: "../components/backbone/backbone"
+		d3: "../components/d3/d3.min"
 
 	shim:
 		bootstrap:
@@ -14,11 +15,17 @@ require.config
 		handlebars:
 			exports: "Handlebars"
 
+		underscore:
+			exports: "_"
+
 		backbone:
 			deps: ["underscore"]
 			exports: "Backbone"
 
-require ["jquery", "routers/app_router"], ($, AppRouter) ->
+		d3:
+			exports: "d3"
+
+require ["jquery", "routers/app_router"], ($, AppRouter, _) ->
 	"use strict"
 	# console.log "Running jQuery %s", $().jquery
 	$ ->
