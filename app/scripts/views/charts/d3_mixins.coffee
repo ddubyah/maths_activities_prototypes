@@ -31,9 +31,18 @@ define [
 			xMin = D3.min [xMin, 0]
 			yMin = D3.min [yMin, 0]
 			
-			@xScale @_makeScale [xMin, xMax], [0, paddedWidth]
-			@yScale @_makeScale [yMax, yMin], [0, paddedWidth]
+			if @xScale()
+				@_updateScale @xScale(), [xMin, xMax], [0, paddedWidth]
+			else
+				@xScale @_makeScale [xMin, xMax], [0, paddedWidth]
+
+			if @yScale()
+				@_updateScale @yScale(), [yMax, yMin], [0, paddedWidth]
+			else
+				@yScale @_makeScale [yMax, yMin], [0, paddedWidth]
+			
 			@trigger 'rescale', @xScale(), @yScale() 
+
 
 		getMaxModelProperty: (modelProperty)->
 			max = D3.max @collection.models, (d)->
@@ -79,6 +88,12 @@ define [
 				.domain(domain)
 				.range(range)
 				.nice()
+
+		_updateScale: (scale, domain, range)->
+			console.log "Updating scale for %s -> %s", domain.toString(), range.toString()
+			scale.domain domain
+			scale.range range
+
 	}
 
 	return D3ViewMixins

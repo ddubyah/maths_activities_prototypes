@@ -22,7 +22,7 @@ define [
 			super()
 			_.extend this, D3Mixins
 
-			@options = _.extend @defaults, @options
+			# @options = _.extend @defaults, @options
 			@axisGroup = @makePaddedGroup 'axis'
 
 			@axisObject = D3.svg.axis()

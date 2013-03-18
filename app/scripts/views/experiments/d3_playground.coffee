@@ -12,7 +12,7 @@ define [
 		initialize: ->
 			@sampleGeometry = @_makeGeo()
 			window.geometry = @sampleGeometry
-			@geometrySvg = new ChartViews.GeometrySVG collection: @sampleGeometry, className: 'chart'
+			@geometrySvg = new ChartViews.GeometrySVG collection: @sampleGeometry, className: 'chart', padding:50
 			@geometryControls = new ChartViews.Geometry collection: @sampleGeometry, className: 'controls'
 			
 		render: ->
@@ -32,14 +32,18 @@ define [
 			@listenTo @geometrySvg, 'hoverPoint', (point)->
 				console.log "%s hovererd", point.get 'label'
 			# @listenTo @geometrySvg, 'clickPoint'
+			@_createAxis()
 
-			@xAxis = @_createAxis {
+			@_createLabels()
+
+		_createAxis: ->
+			@xAxis = @_makeAxis {
 				scale: @geometrySvg.xScale()
 				padding: @geometrySvg.padding()
 				orient: 'bottom'
 			}
 
-			@yAxis = @_createAxis {
+			@yAxis = @_makeAxis {
 				scale: @geometrySvg.yScale()
 				padding: @geometrySvg.padding()
 				orient: 'left'
@@ -51,8 +55,20 @@ define [
 			@_positionAxis()
 			@listenTo @geometrySvg, 'rescale', @_positionAxis
 
+		_createLabels: ->
+			@labelsView = new ChartViews.PointLabelsSVG {
+				collection: @geometrySvg.collection
+				xScale: @geometrySvg.xScale()
+				yScale: @geometrySvg.yScale()
+			}
+			@geometrySvg.$el.append @labelsView.el
+			@labelsView.render()
 
-		_createAxis: (options)->
+			@listenTo @geometrySvg, 'rescale', =>
+				@labelsView.render()
+			
+
+		_makeAxis: (options)->
 			myAxis = new ChartViews.AxisSVG options
 			myAxis.render()
 			myAxis
