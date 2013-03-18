@@ -37,7 +37,7 @@ define [
 				}
 
 			labels.text (d, i)->
-				"#{d.get('label')}: (#{d.get('x')},#{d.get('y')})"
+				"#{d.get('label')}(#{d.get('x')},#{d.get('y')})"
 
 			labels.transition()
 				.duration(@options.transitionDuration)

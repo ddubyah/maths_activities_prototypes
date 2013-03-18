@@ -9,6 +9,7 @@ define [
 
 	class GeometryView extends Backbone.View
 		tagName: 'ul'
+		className: 'pointList'
 
 		initialize: ->
 

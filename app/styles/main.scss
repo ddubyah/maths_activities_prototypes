@@ -71,7 +71,7 @@ article {
 .label{
 	fill: #000;
 	font-family: 'Reenie Beanie', cursive;
-	font-size: 1.5em;
+	font-size: 1.3em;
 }
 
 svg .point:hover {
@@ -88,4 +88,8 @@ svg .axis line, svg .axis path {
 #controls li{
 	font-size: 2em;
 	line-height: 1.2em;
+}
+
+ul.pointList li{
+	list-style: none
 }
