@@ -78,6 +78,7 @@ define [
 			D3.scale.linear()
 				.domain(domain)
 				.range(range)
+				.nice()
 	}
 
 	return D3ViewMixins

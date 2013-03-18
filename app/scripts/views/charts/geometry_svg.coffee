@@ -19,16 +19,19 @@ define [
 				
 		initialize: ->
 			super()
-			_.extend this, D3Mixins
+			# NB - If you can't find it here, look in the 
+			@_applyMixins D3Mixins
 
 			@lineGroup = @makePaddedGroup('line')
 			@pointsGroup = @makePaddedGroup 'points'
 
 			# @line = @_makeLine @lineGroup
-			@listenTo @collection, 'change', @render
+			# @listenTo @collection, 'change', @render
+
+		_applyMixins: (mixins...)->
+			_.extend this, mixin for mixin in arguments
 
 		render: ->
-			@calculateScales()
 			@_setCanvasHeightByXScale()
 			@_drawPoints(@pointsGroup)
 			@_drawLine(@lineGroup)
@@ -39,12 +42,18 @@ define [
 			yscale = @_yScale
 
 			circles = target.selectAll('circle')
-					.data(@collection.models)
+				.data(@collection.models)
 
-			circles.enter()
+			newCircles = circles.enter()
 				.append('circle')
 				.attr('r', 2)
+			
+			newCircles.on 'mouseover', (d, i)=>
+				@trigger "hoverPoint", d, i
 
+			newCircles.on 'click', (d, i)=>
+				@trigger "selectPoint", d, i
+				
 			circles.attr 'r': 8
 
 			circles.transition()

@@ -18,25 +18,57 @@ define [
 		render: ->
 			console.log "Rendering"
 			@$el.html @template { title: 'D3 Playground' }
-			@_renderDiagram()			
-			@_renderControls()
+			@_createDiagram()			
+			@_createControls()
 
-		_renderDiagram: ->
+		_createDiagram: ->
 			figureElement = @$el.find('figure').first()
 			figureElement.empty()
 			figureElement.append @geometrySvg.el
 
+			@_renderDiagram()
+			@listenTo @sampleGeometry, 'change', @_renderDiagram
+
+			@listenTo @geometrySvg, 'hoverPoint', (point)->
+				console.log "%s hovererd", point.get 'label'
+			# @listenTo @geometrySvg, 'clickPoint'
+
+			@xAxis = @_createAxis {
+				scale: @geometrySvg.xScale()
+				padding: @geometrySvg.padding()
+				orient: 'bottom'
+			}
+
+			@yAxis = @_createAxis {
+				scale: @geometrySvg.yScale()
+				padding: @geometrySvg.padding()
+				orient: 'left'
+			}
+
+			@geometrySvg.$el.append @xAxis.el
+			@geometrySvg.$el.append @yAxis.el
+
+			@_positionAxis()
+			@listenTo @geometrySvg, 'rescale', @_positionAxis
+
+
+		_createAxis: (options)->
+			myAxis = new ChartViews.AxisSVG options
+			myAxis.render()
+			myAxis
+
+		_positionAxis: =>
+			console.log "Posistioning axis"
+			@xAxis.translate( 0, @geometrySvg.yScale()(0))
+			@yAxis.translate( @geometrySvg.xScale()(0), 0 )
+			@xAxis.render @geometrySvg.xScale()
+			@yAxis.render @geometrySvg.yScale()
+
+		_renderDiagram: =>
 			@geometrySvg.calculateScales()
 			@geometrySvg.render()
 
-			axisGroup = @geometrySvg.makePaddedGroup "xAxis"
-			console.log "Axis live here: %s", axisGroup[0]
-			console.log axisGroup
-			# @xAxis = new ChartViews.AxisSVG scale: @geometrySvg.xScale(), el: axisGroup
-
-			# @xAxis.render()
-
-		_renderControls: ->
+		_createControls: ->
 			@$el.find('#controls').html(@geometryControls.$el)
 			@geometryControls.render()
 
