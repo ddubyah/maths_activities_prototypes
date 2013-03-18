@@ -1,6 +1,7 @@
 define [
 	'backbone'
-], (Backbone)->
+	'underscore'
+], (Backbone, _)->
 	# Create a properly namespaced svg view by overriding Backbone's
 	# _ensureElement method
 	class SVGCanvasView extends Backbone.View
@@ -8,6 +9,13 @@ define [
 		tagName: 'svg'
 		
 		nameSpace: "http://www.w3.org/2000/svg"
+
+		defaults: {
+			padding: 0
+		}
+
+		initialize: ->
+			@options = _.extend @defaults, @options
 		
 		_ensureElement: ->
       unless @el

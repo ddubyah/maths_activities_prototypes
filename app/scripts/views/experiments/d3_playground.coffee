@@ -1,16 +1,15 @@
 define [
 	'backbone'
+	'underscore'
 	'models/charts/index'
 	'views/charts/index'
 	'templates/experiments/playground'
-], (Backbone, ChartModels, ChartViews, PlaygroundTemplate)->
+], (Backbone, _,ChartModels, ChartViews, PlaygroundTemplate)->
 
 	class D3Playground extends Backbone.View
 		template: PlaygroundTemplate
 
 		initialize: ->
-			$(window).resize (e)->
-				console.log "Resized!"
 			@sampleGeometry = @_makeGeo()
 			window.geometry = @sampleGeometry
 			@geometrySvg = new ChartViews.GeometrySVG collection: @sampleGeometry, className: 'chart'
@@ -29,6 +28,13 @@ define [
 
 			@geometrySvg.calculateScales()
 			@geometrySvg.render()
+
+			axisGroup = @geometrySvg.makePaddedGroup "xAxis"
+			console.log "Axis live here: %s", axisGroup[0]
+			console.log axisGroup
+			# @xAxis = new ChartViews.AxisSVG scale: @geometrySvg.xScale(), el: axisGroup
+
+			# @xAxis.render()
 
 		_renderControls: ->
 			@$el.find('#controls').html(@geometryControls.$el)

@@ -15,6 +15,9 @@ require.config
 		handlebars:
 			exports: "Handlebars"
 
+		underscore:
+			exports: "_"
+
 		backbone:
 			deps: ["underscore"]
 			exports: "Backbone"
@@ -22,7 +25,7 @@ require.config
 		d3:
 			exports: "d3"
 
-require ["jquery", "routers/app_router"], ($, AppRouter) ->
+require ["jquery", "routers/app_router"], ($, AppRouter, _) ->
 	"use strict"
 	# console.log "Running jQuery %s", $().jquery
 	$ ->

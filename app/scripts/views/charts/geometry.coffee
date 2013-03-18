@@ -17,7 +17,6 @@ define [
 				pointView = new PointView model: point, className: 'pointView', tagName: 'li'
 				@listenTo pointView, 'selected', @_editPoint
 				@$el.append pointView.render().$el
-				console.log @collection.toJSON()
 			return this
 
 		_editPoint: (pointView)->
