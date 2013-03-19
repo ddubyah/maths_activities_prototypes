@@ -10,5 +10,5 @@ define [
 
 		render: ->
 			@$el.html @template { title: 'Right Angle Triangle Builder' }
-			
+
 

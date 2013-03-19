@@ -36,6 +36,12 @@ define [
 					transform: "translate(50, 50)"
 				}
 
+			labels.exit().transition()
+				.duration(@options.transitionDuration)
+				.attr({
+					opacity: 0
+				}).remove()
+
 			labels.text (d, i)->
 				"#{d.get('label')}(#{d.get('x')},#{d.get('y')})"
 

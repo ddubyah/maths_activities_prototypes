@@ -9,17 +9,25 @@ define [
 	class D3Playground extends Backbone.View
 		template: PlaygroundTemplate
 
+		events:
+			"click a.save": "_saveGeometry"
+			"click a.load": "_loadGeometry"
+			"click a.reset": "_resetGeometry"
+
 		initialize: ->
-			@sampleGeometry = @_makeGeo()
+			@sampleGeometry = new ChartModels.Geometry @_defaultGeo()
 			window.geometry = @sampleGeometry
 			@geometrySvg = new ChartViews.GeometrySVG collection: @sampleGeometry, className: 'chart', padding:50
 			@geometryControls = new ChartViews.Geometry collection: @sampleGeometry
+			@listenTo @sampleGeometry, 'error', (e)->
+				alert "Error: "+e
 			
 		render: ->
 			console.log "Rendering"
 			@$el.html @template { title: 'D3 Playground' }
 			@_createDiagram()			
 			@_createControls()
+			@sampleGeometry.fetch()
 
 		_createDiagram: ->
 			figureElement = @$el.find('figure').first()
@@ -27,7 +35,9 @@ define [
 			figureElement.append @geometrySvg.el
 
 			@_renderDiagram()
-			@listenTo @sampleGeometry, 'change', @_renderDiagram
+			@listenTo @sampleGeometry, 'change reset', =>
+				@_renderDiagram()
+				@_createControls()
 
 			@listenTo @geometrySvg, 'hoverPoint', (point)->
 				console.log "%s hovererd", point.get 'label'
@@ -81,6 +91,7 @@ define [
 			@yAxis.render()# @geometrySvg.yScale()
 
 		_renderDiagram: =>
+			console.log "Rendering!"
 			@geometrySvg.calculateScales()
 			@geometrySvg.render()
 
@@ -88,12 +99,31 @@ define [
 			@$el.find('section#pointControls').html(@geometryControls.$el)
 			@geometryControls.render()
 
-		_makeGeo: ->
-			geo = new ChartModels.Geometry [
+		_saveGeometry: (e)=>
+			e.preventDefault() if e?
+			console.log @sampleGeometry
+			@sampleGeometry.forEach (point)->
+				point.save()
+			# 
+		_loadGeometry: (e)=>
+			e.preventDefault() if e?
+			console.log "Loading"
+			@sampleGeometry.fetch()
+
+		_resetGeometry: (e)=>
+			e.preventDefault() if e?
+			console.log "Reseting"
+			# @sampleGeometry.invoke 'destroy'
+			while aPoint = @sampleGeometry.first()
+				aPoint.destroy()
+			@sampleGeometry.reset @_defaultGeo(), validate: false
+
+		_defaultGeo: ->
+			[
 				{ label: 'a', x: 5, y: 5 }
 				{ label: 'b', x: 10, y: 8 }
 				{ label: 'c', x: 3, y: 7 }
 			]
-			geo
+			
 
 	return D3Playground
