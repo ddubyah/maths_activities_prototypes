@@ -16,7 +16,7 @@ define [
 			"": "index"
 			"experiments/d3playground": "d3Playground"
 			"experiments/d3tester": "d3tester"
-			"maths/ra_triangles": "raTriangle"
+			"maths/ra_triangles(/:id)(/)": "raTriangle"
 
 			"*path": "index"
 
@@ -33,10 +33,13 @@ define [
 			d3 = new d3View { el: $('#app') }
 			d3.render()
 
-		raTriangle: ->
-			raTriangleBuilder = new MathViews.RaTriangleBuilder el: $('#app')
+		raTriangle: (id)->
+			console.log "Triangle Id -> %s", id
+			raTriangleBuilder = new MathViews.RaTriangleBuilder el: $('#app'), shape_id: id
 			raTriangleBuilder.render()
+
 		d3tester: ->
 			d3 = new d3TestView el: $('#app')
 			d3.render()
+
 	return AppRouter
