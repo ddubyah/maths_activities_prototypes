@@ -90,9 +90,9 @@ define [
 
 		_makeGeo: ->
 			geo = new ChartModels.Geometry [
-				{ label: 'a', x: -20, y: 0 }
-				{ label: 'b', x: 60, y: 40 }
-				{ label: 'c', x: 0, y: 60 }
+				{ label: 'a', x: 5, y: 5 }
+				{ label: 'b', x: 10, y: 8 }
+				{ label: 'c', x: 3, y: 7 }
 			]
 			geo
 
