@@ -15,7 +15,7 @@ define [
 			"click a.reset": "_resetGeometry"
 
 		initialize: ->
-			@sampleGeometry = new ChartModels.Geometry @_defaultGeo()
+			@sampleGeometry = new ChartModels.Geometry @_defaultGeo
 			window.geometry = @sampleGeometry
 			@geometrySvg = new ChartViews.GeometrySVG collection: @sampleGeometry, className: 'chart', padding:50
 			@geometryControls = new ChartViews.Geometry collection: @sampleGeometry

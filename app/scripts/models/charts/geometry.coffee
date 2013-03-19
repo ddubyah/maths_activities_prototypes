@@ -6,7 +6,7 @@ define [
 
 	class Geometry extends Backbone.Collection
 		model: Point
-		localStorage: new Backbone.LocalStorage "geometry"
+		localStorage: new Backbone.LocalStorage "points"
 
 
 	return Geometry

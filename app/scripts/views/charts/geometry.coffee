@@ -24,7 +24,6 @@ define [
 			return this
 
 		_editPoint: (pointView)->
-			console.log "Editing "+ pointView.model.get 'label'
 			@_resetViews()
 			
 			@_selectedView = pointView
