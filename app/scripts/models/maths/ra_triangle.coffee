@@ -1,7 +1,8 @@
 define [
 	'backbone'
 	'localStorage'
-], (backbone, localStorage)->
+	'../charts/geometry'
+], (backbone, localStorage, Geometry)->
 
 	class RATriangle extends Backbone.Model
 		sync: Backbone.localSync
@@ -14,15 +15,29 @@ define [
 				x: 0
 				y: 0
 
-		initialize: ->
-			@_makeGeometry()
+		_geometry: null
 
-		geometry: ->
+		initialize: ->
+			@_geometry = new Geometry @_makeGeometry()
+
+		get: (attr)->
+			if attr is 'geometry'
+				@_geometry.reset @_makeGeometry()
+				return @_geometry
+			else
+				return @attributes[attr]
 
 
 		_makeGeometry: ->
-			pt1 = @_makePoint "a", @get('origin').x, @get('origin').y
-			console.log pt1
+			dx = @get 'dx'
+			dy = @get 'dy'
+			origin = @get 'origin'
+
+			pt1 = @_makePoint "a", origin.x, origin.y
+			pt2 = @_makePoint "b", origin.x + dx, origin.y
+			pt3 = @_makePoint "c", origin.x + dx, origin.y + dy
+			
+			[pt1, pt2, pt3]
 
 		_makePoint: (label, x, y)->
 			{
