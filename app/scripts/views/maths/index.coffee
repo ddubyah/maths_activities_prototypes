@@ -1,6 +1,10 @@
 define [
 	'./ra_triangles/new_ra_triangle'
-], (RaTriangleBuilder)->
+	'./exercises/enlargement'
+
+], (RaTriangleBuilderView, EnlargementView)->
 	{
-		RaTriangleBuilder: RaTriangleBuilder
+		RaTriangleBuilder: RaTriangleBuilderView
+		Exercises:
+			Enlargement: EnlargementView
 	}
