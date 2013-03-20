@@ -1,11 +1,12 @@
 define [
 	'backbone'
+	'underscore'
 	'models/maths/ra_triangle'
 	'views/charts/d3_mixins'
 	'views/charts/index'
 	'templates/maths/exercises/enlargement'
 
-], (Backbone, RaTriangle, D3Mixins, ChartViews, EnlargementTemplate)->
+], (Backbone, _, RaTriangle, D3Mixins, ChartViews, EnlargementTemplate)->
 
 	class EnlargementView extends Backbone.View
 
@@ -13,21 +14,40 @@ define [
 
 		initialize: ->
 			@_applyMixins D3Mixins
-			window.enlargementView = this
 
 			@$el.html @template { title: 'Enlargement' }
 			@model = @_getSourceModel()
+
 			@_diagram = @_makeDiagram @model.get 'geometry'
-			@_establishScales @_diagram
-			# @_diagram.clampBoundsToWidth()
-			@_diagram.render()
+			@$el.find('figure').first().append @_diagram.el
+
+			@_enlargement = @_makeEnlargement @model.get 'geometry'
+			@_diagram.$el.append @_enlargement.el
+
+			window.enlargementView = @_enlargement
+
+			@_establishScales @_diagram, @_diagram.collection
+			@_linkScales this, @_diagram, @_enlargement
+
+			# @_diagram.render()
 			@_drawAxis @_diagram
 
 		_applyMixins: (mixins...)->
 			_.extend this, mixin for mixin in arguments
 
 		render: ->
-			@_refreshAxis @_diagram
+			@_updateEnlargement()
+			@_establishScales @_diagram, @_diagram.collection, @_enlargement.collection
+			@_linkScales this, @_diagram, @_enlargement
+
+			@_diagram.render()
+			@_enlargement.render()
+			@_refreshAxis this
+
+		_updateEnlargement: ->
+			enlargedTriangle = @_enlargeTriangle @model, 3
+			enlargedGeometry = enlargedTriangle.get 'geometry'
+			@_enlargement.collection = enlargedGeometry
 
 		_getSourceModel: ->
 			if @options.shape_id?
@@ -44,9 +64,15 @@ define [
 				className: 'chart'
 				padding: 50
 
-			@$el.find('figure').first().append geometryView.el
-
 			geometryView
+
+		_makeEnlargement: (geometry)->
+			enlargementView = new ChartViews.GeometrySVG
+				tagName: 'g'
+				collection: geometry
+				className: 'enlargement'
+				padding: 50
+			enlargementView
 
 		_drawAxis: (diagram)->
 			console.log "Creating axis"
@@ -77,5 +103,47 @@ define [
 			@xAxis.render(parentView.xScale())
 			@yAxis.render(parentView.yScale())
 
-		_establishScales: (diagrams...)->
-			@clampBoundsToWidth diagrams[0].el$
+		_establishScales: (mainDiagram, geometries...)->
+			[paddedWidth, paddedHeight] = mainDiagram.getPaddedDimensions()
+			allValues = []
+
+			for geo in geometries
+				console.log "Plucking"
+				console.log geo
+				xs = geo.pluck 'x'
+				ys = geo.pluck 'y'
+				allValues = allValues.concat(xs).concat(ys)
+
+			range = [0, paddedWidth]
+			domain = d3.extent allValues
+
+			@_ensureScale @xScale, domain, range
+			@_ensureScale @yScale, domain.reverse(), range
+
+		_linkScales: (parent, diagrams...)->
+			for diagram in diagrams
+				diagram.xScale parent.xScale()
+				diagram.yScale parent.yScale()
+
+		_enlargeTriangle: (triangle, scale)->
+			console.log "Scaling triangle"
+
+			newTri = new RaTriangle
+				dx: triangle.attributes.dx * scale
+				dy: triangle.attributes.dy * scale
+			newTri
+
+		_enlargeGeometry: (geometry, scale)->
+			sourceGeo = geometry.toJSON()
+			console.log "Source geometry: "
+			console.log sourceGeo
+			newGeometry = []
+			for geo in sourceGeo
+				newGeometry = newGeometry.concat {
+					label: geo.label
+					x: geo.x * scale
+					y: geo.y * scale
+				}
+			console.log "Enlarged geometry: "
+			console.log newGeometry
+

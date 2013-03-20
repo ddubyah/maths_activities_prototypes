@@ -16,7 +16,7 @@ define [
 			group
 
 		calculateScales: ->
-			[paddedWidth, paddedHeight] = @_getPaddedDimensions()
+			[paddedWidth, paddedHeight] = @getPaddedDimensions()
 
 
 			xMax = @getMaxModelProperty 'x'
@@ -35,7 +35,7 @@ define [
 			@trigger 'rescale', @xScale(), @yScale() 
 
 		clampBoundsToWidth: (el)->
-			[paddedWidth, paddedHeight] = @_getPaddedDimensions(el)
+			[paddedWidth, paddedHeight] = @getPaddedDimensions(el)
 
 			xMax = @getMaxModelProperty 'x'
 			yMax = @getMaxModelProperty 'y'
@@ -77,7 +77,7 @@ define [
 			console.log "Setting y scale "+ aScale
 			@_yScale = aScale
 
-		_getPaddedDimensions: (el = @$el)->
+		getPaddedDimensions: ->
 			paddedWidth = @$el.width() - (@padding() * 2)
 			paddedHeight = @$el.height() - (@padding() * 2)
 			[paddedWidth, paddedHeight]
