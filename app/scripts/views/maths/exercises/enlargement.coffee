@@ -4,13 +4,16 @@ define [
 	'models/maths/ra_triangle'
 	'views/charts/d3_mixins'
 	'views/charts/index'
+	'./enlargement_controls'
 	'templates/maths/exercises/enlargement'
 
-], (Backbone, _, RaTriangle, D3Mixins, ChartViews, EnlargementTemplate)->
+], (Backbone, _, RaTriangle, D3Mixins, ChartViews, EnlargementControlsView, EnlargementTemplate)->
 
 	class EnlargementView extends Backbone.View
 
 		template: EnlargementTemplate
+
+		_scalor: 1
 
 		initialize: ->
 			@_applyMixins D3Mixins
@@ -20,6 +23,9 @@ define [
 
 			@_diagram = @_makeDiagram @model.get 'geometry'
 			@$el.find('figure').first().append @_diagram.el
+
+			@_controlsView = @_makeControls()
+			@_controlsView.render()
 
 			@_enlargement = @_makeEnlargement @model.get 'geometry'
 			@_diagram.$el.append @_enlargement.el
@@ -45,7 +51,7 @@ define [
 			@_refreshAxis this
 
 		_updateEnlargement: ->
-			enlargedTriangle = @_enlargeTriangle @model, 3
+			enlargedTriangle = @_enlargeTriangle @model, @_scalor
 			enlargedGeometry = enlargedTriangle.get 'geometry'
 			@_enlargement.collection = enlargedGeometry
 
@@ -57,6 +63,14 @@ define [
 				raTri = new RaTriangle()
 
 			raTri
+
+		_makeControls: ->
+			controlsView = new EnlargementControlsView el: @$el.find('#controls'), model: @model
+			@listenTo controlsView, 'update', (scalor)=>
+				unless isNaN(scalor)
+					@_scalor = scalor
+					@render()
+			controlsView
 
 		_makeDiagram: (geometry)->
 			geometryView = new ChartViews.GeometrySVG 
@@ -71,6 +85,7 @@ define [
 				tagName: 'g'
 				collection: geometry
 				className: 'enlargement'
+				transitionDuration: 2000
 				padding: 50
 			enlargementView
 
