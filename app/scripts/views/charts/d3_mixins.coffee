@@ -34,23 +34,20 @@ define [
 			
 			@trigger 'rescale', @xScale(), @yScale() 
 
-		ensureBoundsToWidth: ->
+		clampBoundsToWidth: ->
 			[paddedWidth, paddedHeight] = @_getPaddedDimensions()
 
 			xMax = @getMaxModelProperty 'x'
 			yMax = @getMaxModelProperty 'y'
 
-			xMin = @getMinModelProperty 'x', 0
-			yMin = @getMinModelProperty 'y', 0
+			xMin = @getMinModelProperty 'x'
+			yMin = @getMinModelProperty 'y'
 
-			# make minimums at least 0
-			xMin = D3.min [xMin, 0]
-			yMin = D3.min [yMin, 0]
-
-			@calculateScales()
-
-
-
+			extent = D3.extent [xMax, yMax, xMin, yMin]
+			console.log "Full extent = "+ extent
+			window.extent = extent
+			@_ensureScale @xScale, extent, [0, paddedWidth]
+			@_ensureScale @yScale, extent.reverse(), [0, paddedWidth]
 
 		getMaxModelProperty: (modelProperty)->
 			max = D3.max @collection.models, (d)->
@@ -108,8 +105,10 @@ define [
 			scale.domain domain
 			scale.rangeRound range
 
+		_findLargestDomain: (domain1, domain2)->
+			dx1 = domain1[1] - domain2[0]
+
 		_ensureScale: (scaleGetter, domain, range)->
-			console.log "Checking scale for "+ scaleGetter
 			if scaleGetter()
 				console.log "Updating scale to ensure"
 				@_updateScale scaleGetter(), domain, range
