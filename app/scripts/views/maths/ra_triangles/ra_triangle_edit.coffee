@@ -15,7 +15,7 @@ define [
 		save: (e)->
 			e.preventDefault()
 			errors = @model.save 
-				dx: @$el.find('input[name=dxInput]').val()
-				dy: @$el.find('input[name=dyInput]').val()
+				dx: Number @$el.find('input[name=dxInput]').val()
+				dy: Number @$el.find('input[name=dyInput]').val()
 			@trigger "update"
 			

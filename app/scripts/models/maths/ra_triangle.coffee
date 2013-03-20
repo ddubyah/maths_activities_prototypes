@@ -27,6 +27,11 @@ define [
 			else
 				return @attributes[attr]
 
+		validate: (attrs, options)->
+			console.log "Validating raTriangle: "
+			return "dx and dy coordinates must be numeric" if isNaN(attrs.dx) or isNaN(attrs.dy)
+			return null
+
 
 		_makeGeometry: ->
 			dx = @get 'dx'
@@ -45,3 +50,8 @@ define [
 				x: x
 				y: y
 			}
+
+		toJSON: ->
+			attrs = @attributes
+			attrs.geometry = @_makeGeometry()
+			attrs

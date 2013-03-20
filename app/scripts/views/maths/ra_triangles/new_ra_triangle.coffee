@@ -15,13 +15,21 @@ define [
 			@$el.html @template { title: 'Right Angle Triangle Builder' }
 
 			@formView = @_makeFormView @model
+			@_diagramView = @_makeDiagram()
+
 			@listenTo @formView, 'update', @render
 
 
 			window.myshape = @model
+			window.mydiagram = @_diagramView
 
 		render: ->
 			@formView.render().el
+			# force a reset on the geometry
+			myGeo = @model.get 'geometry'
+			@_diagramView.ensureBoundsToWidth()
+
+			@_diagramView.render()
 
 		_getTriangleInstance: ->
 			if @options.shape_id?
@@ -37,4 +45,13 @@ define [
 			formView = new RATriangleEditView model: aTriangle, el: @$el.find('#triangleControls')
 			formView
 
+		_makeDiagram: ->
+			geometry = @model.get 'geometry'
+			geometryView = new ChartViews.GeometrySVG 
+				collection: geometry
+				className: 'chart'
+				padding: 50
 
+			@$el.find('figure').first().append geometryView.el
+
+			geometryView

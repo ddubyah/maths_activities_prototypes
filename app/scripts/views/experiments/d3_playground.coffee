@@ -18,6 +18,7 @@ define [
 			@sampleGeometry = new ChartModels.Geometry @_defaultGeo()
 			window.geometry = @sampleGeometry
 			@geometrySvg = new ChartViews.GeometrySVG collection: @sampleGeometry, className: 'chart', padding:50
+			window.diagram = @geometrySvg
 			@geometryControls = new ChartViews.Geometry collection: @sampleGeometry
 			@listenTo @sampleGeometry, 'error', (e)->
 				alert "Error: "+e
