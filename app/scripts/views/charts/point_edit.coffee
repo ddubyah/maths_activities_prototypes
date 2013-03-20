@@ -12,6 +12,7 @@ define [
 
 		initialize: ->
 			@listenTo @model, 'change', @render
+			
 
 		render: ->
 			@$el.empty()
@@ -23,8 +24,8 @@ define [
 			newX = @$('input[name=x]').val() || @model.get 'x'
 			newY = @$('input[name=y]').val() || @model.get 'y'
 
-			@model.set 'x', newX if @_validateDigits newX
-			@model.set 'y', newY if @_validateDigits newY
+			@model.set 'x', newX, validate: true #if @_validateDigits newX
+			@model.set 'y', newY, validate: true #if @_validateDigits newY
 			@trigger 'update', this
 
 		_validateDigits: (input)->

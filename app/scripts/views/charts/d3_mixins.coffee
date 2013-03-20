@@ -16,10 +16,8 @@ define [
 			group
 
 		calculateScales: ->
-			paddedWidth = @$el.width() - (@options.padding * 2)
-			paddedHeight = @$el.height() - (@options.padding * 2)
+			[paddedWidth, paddedHeight] = @getPaddedDimensions()
 
-			# paddedHeight = paddedWidth if paddedHeight > paddedWidth
 
 			xMax = @getMaxModelProperty 'x'
 			yMax = @getMaxModelProperty 'y'
@@ -30,19 +28,26 @@ define [
 			# make minimums at least 0
 			xMin = D3.min [xMin, 0]
 			yMin = D3.min [yMin, 0]
-			
-			if @xScale()
-				@_updateScale @xScale(), [xMin, xMax], [0, paddedWidth]
-			else
-				@xScale @_makeScale [xMin, xMax], [0, paddedWidth]
-
-			if @yScale()
-				@_updateScale @yScale(), [yMax, yMin], [0, paddedWidth]
-			else
-				@yScale @_makeScale [yMax, yMin], [0, paddedWidth]
+			 	
+			@_ensureScale @xScale, [xMin, xMax], [0, paddedWidth]
+			@_ensureScale @yScale, [yMax, yMin], [0, paddedWidth]
 			
 			@trigger 'rescale', @xScale(), @yScale() 
 
+		clampBoundsToWidth: (el)->
+			[paddedWidth, paddedHeight] = @getPaddedDimensions(el)
+
+			xMax = @getMaxModelProperty 'x'
+			yMax = @getMaxModelProperty 'y'
+
+			xMin = @getMinModelProperty 'x'
+			yMin = @getMinModelProperty 'y'
+
+			extent = D3.extent [xMax, yMax, xMin, yMin]
+			console.log "Full extent = "+ extent
+			window.extent = extent
+			@_ensureScale @xScale, extent, [0, paddedWidth]
+			@_ensureScale @yScale, extent.reverse(), [0, paddedWidth]
 
 		getMaxModelProperty: (modelProperty)->
 			max = D3.max @collection.models, (d)->
@@ -59,17 +64,23 @@ define [
 			min
 
 		padding: (dx)->
-			return @options.padding unless arguments.length
+			return @options.padding || 30 unless arguments.length
 			@options.padding = dx
 
 		xScale: (aScale)->
 			return @_xScale unless arguments.length 
+			console.log "Setting x scale"
 			@_xScale = aScale		
 
 		yScale: (aScale)->
 			return @_yScale unless arguments.length 
+			console.log "Setting y scale "+ aScale
 			@_yScale = aScale
 
+		getPaddedDimensions: ->
+			paddedWidth = @$el.width() - (@padding() * 2)
+			paddedHeight = @$el.height() - (@padding() * 2)
+			[paddedWidth, paddedHeight]
 
 		_setCanvasHeightByXScale: ->
 			availableWidth = @$el.width()
@@ -86,13 +97,24 @@ define [
 			console.log "Making scale for %s -> %s", domain.toString(), range.toString()
 			D3.scale.linear()
 				.domain(domain)
-				.range(range)
+				.rangeRound(range)
 				.nice()
 
 		_updateScale: (scale, domain, range)->
 			console.log "Updating scale for %s -> %s", domain.toString(), range.toString()
 			scale.domain domain
-			scale.range range
+			scale.rangeRound range
+
+		_findLargestDomain: (domain1, domain2)->
+			dx1 = domain1[1] - domain2[0]
+
+		_ensureScale: (scaleGetter, domain, range)->
+			if scaleGetter()
+				console.log "Updating scale to ensure"
+				@_updateScale scaleGetter(), domain, range
+			else
+				console.log "Creating scale to ensure"
+				scaleGetter.call this, @_makeScale(domain, range)
 
 	}
 

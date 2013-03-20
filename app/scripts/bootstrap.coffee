@@ -4,7 +4,8 @@ require.config
 		handlebars: "../components/handlebars/handlebars"
 		bootstrap: "vendor/bootstrap"
 		underscore: "../components/underscore/underscore-min"
-		backbone: "../components/backbone/backbone"
+		backbone: "../components/backbone/backbone-min"
+		localStorage: "../components/backbone.localStorage/backbone.localStorage-min"
 		d3: "../components/d3/d3.min"
 
 	shim:

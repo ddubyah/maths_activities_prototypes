@@ -67,6 +67,11 @@ article {
 	fill-opacity: 0.2;
 }
 
+.enlargement path.shape {
+	stroke: $strokes;
+	fill: orange;
+	fill-opacity: 0.2;
+}
 
 .label{
 	fill: #000;

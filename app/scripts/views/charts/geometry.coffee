@@ -12,16 +12,18 @@ define [
 		className: 'pointList'
 
 		initialize: ->
+		_activeViews: []
 
 		render: ->
+			@_clearViews()
 			for point in @collection.models
 				pointView = new PointView model: point, className: 'pointView', tagName: 'li'
+				@_activeViews.push pointView
 				@listenTo pointView, 'selected', @_editPoint
 				@$el.append pointView.render().$el
 			return this
 
 		_editPoint: (pointView)->
-			console.log "Editing "+ pointView.model.get 'label'
 			@_resetViews()
 			
 			@_selectedView = pointView
@@ -35,7 +37,14 @@ define [
 			@listenTo @_editView, 'update', @_resetViews
 			@_editView.render()
 
+		_clearViews: ->
+			while oldView = @_activeViews.pop()
+				console.log "Removing view "+ oldView
+				@stopListening oldView
+				oldView.remove()
+
 		_resetViews: ()->
+			console.log "Reseting views after updpate"
 			if @_editView
 				@stopListening @_editView 
 				delete @_editView

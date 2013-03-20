@@ -1,0 +1,24 @@
+<form class="form">
+	<fieldset>
+		<div class="input-append">
+			{{id}}
+			<input name='dxInput' type="text" class="input-small" value="{{dx}}" size='4' autofocus><span class="add-on">width</span>
+		</div>
+	</fieldset>
+
+	<fieldset>
+		<div class="input-append">
+			<input name='dyInput' type="text" class="input-small" value="{{dy}}" size='4'><span class="add-on">height</span>
+		</div>
+	</fieldset>
+
+	<fieldset>
+		<button type="submit" class="btn">Go!</button>
+	</fieldset>
+	{{#if id}}
+	<small><a href="maths/ra_triangles/{{id}}" class="label label-info" data-local="true">perma-link</a></small>
+	<a href="maths/exercises/enlargement/{{id}}" class="label label-success" data-local="true">Enlarge Me!</a>
+	{{/if}}
+
+
+</form>

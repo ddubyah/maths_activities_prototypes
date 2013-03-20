@@ -8,7 +8,8 @@
     "jquery": "~1.9.1",
     "backbone": "~0.9.10",
     "handlebars": "~1.0.0-rc.3",
-    "underscore": "~1.4.4"
+    "underscore": "~1.4.4",
+    "backbone.localStorage": "~1.1.0"
   },
   "devDependencies": {}
 }

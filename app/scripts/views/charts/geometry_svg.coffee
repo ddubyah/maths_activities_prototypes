@@ -56,6 +56,13 @@ define [
 				
 			circles.attr 'r': 8
 
+			circles.exit().transition()
+				.duration(500)
+				.attr({
+					r: 0
+				})
+				.remove()
+
 			circles.transition()
 				.duration(@options.transitionDuration)
 				.ease(@options.transitionEase)
