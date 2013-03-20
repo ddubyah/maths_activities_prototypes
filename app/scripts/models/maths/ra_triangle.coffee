@@ -19,6 +19,7 @@ define [
 
 		geometry: ->
 
+
 		_makeGeometry: ->
 			pt1 = @_makePoint "a", @get('origin').x, @get('origin').y
 			console.log pt1

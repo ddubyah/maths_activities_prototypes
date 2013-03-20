@@ -1,8 +1,8 @@
 <form class="form">
-
 	<fieldset>
 		<div class="input-append">
-			<input name='dxInput' type="text" class="input-small" value="{{dx}}" size='4'><span class="add-on">width</span>
+			{{id}}
+			<input name='dxInput' type="text" class="input-small" value="{{dx}}" size='4' autofocus><span class="add-on">width</span>
 		</div>
 	</fieldset>
 
@@ -15,5 +15,7 @@
 	<fieldset>
 		<button type="submit" class="btn">Go!</button>
 	</fieldset>
+	{{#if id}}<small><span class="label label-info">perma-link:</span> <a href="maths/ra_triangles/{{id}}" data-local="true">{{id}}</a></small>{{/if}}
+
 
 </form>

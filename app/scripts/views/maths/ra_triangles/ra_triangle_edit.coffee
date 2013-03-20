@@ -5,7 +5,17 @@ define [
 
 	class RaTriangleEditView extends Backbone.View
 
+		events:
+			'submit': 'save'
+
 		render: ->
-			console.log "Rendering triangle forms"
 			@$el.html RaEditTemplate(@model.attributes)
 			this
+
+		save: (e)->
+			e.preventDefault()
+			errors = @model.save 
+				dx: @$el.find('input[name=dxInput]').val()
+				dy: @$el.find('input[name=dyInput]').val()
+			@trigger "update"
+			

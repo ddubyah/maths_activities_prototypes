@@ -11,18 +11,17 @@ define [
 		template: RATrianglesTemplate
 
 		initialize: ->
-			@raTriangle = @_getTriangleInstance()
-			@formView = @_makeFormView @raTriangle
+			@model = @_getTriangleInstance()
+			@$el.html @template { title: 'Right Angle Triangle Builder' }
 
-			window.myshape = @raTriangle
+			@formView = @_makeFormView @model
+			@listenTo @formView, 'update', @render
+
+
+			window.myshape = @model
 
 		render: ->
-			@$el.html @template { title: 'Right Angle Triangle Builder' }
-			@$el.find('#triangleControls')
-				.empty()
-				.append @formView.render().el
-
-
+			@formView.render().el
 
 		_getTriangleInstance: ->
 			if @options.shape_id?
@@ -35,7 +34,7 @@ define [
 			raTri
 
 		_makeFormView: (aTriangle, el)->
-			formView = new RATriangleEditView model: aTriangle
+			formView = new RATriangleEditView model: aTriangle, el: @$el.find('#triangleControls')
 			formView
 
 
