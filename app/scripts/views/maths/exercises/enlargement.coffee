@@ -1,23 +1,30 @@
 define [
 	'backbone'
 	'models/maths/ra_triangle'
-
+	'views/charts/d3_mixins'
 	'views/charts/index'
 	'templates/maths/exercises/enlargement'
 
-], (Backbone, RaTriangle, ChartViews, EnlargementTemplate)->
+], (Backbone, RaTriangle, D3Mixins, ChartViews, EnlargementTemplate)->
 
 	class EnlargementView extends Backbone.View
 
 		template: EnlargementTemplate
 
 		initialize: ->
+			@_applyMixins D3Mixins
+			window.enlargementView = this
+
 			@$el.html @template { title: 'Enlargement' }
 			@model = @_getSourceModel()
 			@_diagram = @_makeDiagram @model.get 'geometry'
-			@_diagram.clampBoundsToWidth()
+			@_establishScales @_diagram
+			# @_diagram.clampBoundsToWidth()
 			@_diagram.render()
 			@_drawAxis @_diagram
+
+		_applyMixins: (mixins...)->
+			_.extend this, mixin for mixin in arguments
 
 		render: ->
 			@_refreshAxis @_diagram
@@ -68,4 +75,7 @@ define [
 			@xAxis.translate( 0, parentView.yScale()(0))
 			@yAxis.translate( parentView.xScale()(0), 0 )
 			@xAxis.render(parentView.xScale())
-			@yAxis.render(parentView.yScale()) 
+			@yAxis.render(parentView.yScale())
+
+		_establishScales: (diagrams...)->
+			@clampBoundsToWidth diagrams[0].el$

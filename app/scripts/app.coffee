@@ -17,7 +17,7 @@ define [
     		@$el.html indextemplate {
     			links: [
                     { name: "Experiments in d3", link: "experiments/d3playground", local: true  }
-    				{ name: "Right Angle Triangles", link: "maths/ra_triangles", local: true }
+    				{ name: "Right Angled Triangles", link: "maths/ra_triangles", local: true }
     			]
     		}
 

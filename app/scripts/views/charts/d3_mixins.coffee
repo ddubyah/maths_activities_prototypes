@@ -34,8 +34,8 @@ define [
 			
 			@trigger 'rescale', @xScale(), @yScale() 
 
-		clampBoundsToWidth: ->
-			[paddedWidth, paddedHeight] = @_getPaddedDimensions()
+		clampBoundsToWidth: (el)->
+			[paddedWidth, paddedHeight] = @_getPaddedDimensions(el)
 
 			xMax = @getMaxModelProperty 'x'
 			yMax = @getMaxModelProperty 'y'
@@ -64,7 +64,7 @@ define [
 			min
 
 		padding: (dx)->
-			return @options.padding unless arguments.length
+			return @options.padding || 30 unless arguments.length
 			@options.padding = dx
 
 		xScale: (aScale)->
@@ -77,9 +77,9 @@ define [
 			console.log "Setting y scale "+ aScale
 			@_yScale = aScale
 
-		_getPaddedDimensions: ->
-			paddedWidth = @$el.width() - (@options.padding * 2)
-			paddedHeight = @$el.height() - (@options.padding * 2)
+		_getPaddedDimensions: (el = @$el)->
+			paddedWidth = @$el.width() - (@padding() * 2)
+			paddedHeight = @$el.height() - (@padding() * 2)
 			[paddedWidth, paddedHeight]
 
 		_setCanvasHeightByXScale: ->
