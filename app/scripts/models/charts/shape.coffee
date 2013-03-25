@@ -25,9 +25,13 @@ define [
 			Backbone.Model.prototype.set.call this, attributes, options
 
 		translate: (dx, dy)->
-			for point in @get('geometry')
-				point.set 'x', point.get('x') + dx
-				point.set 'y', point.get('y') + dy
+			for point in @get('geometry').models
+				point.translate dx, dy
+
+		scale: (scalor, origin={x:0, y:0})->
+			for point in @get('geometry').models
+				point.scale scalor, origin
+
 
 		_getDefaultGeo: ->
 			[

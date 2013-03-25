@@ -2,12 +2,13 @@ define [
 	'backbone'
 	'underscore'
 	'models/maths/ra_triangle'
+	'models/charts/index'
 	'views/charts/d3_mixins'
 	'views/charts/index'
 	'./enlargement_controls'
 	'templates/maths/exercises/enlargement'
 
-], (Backbone, _, RaTriangle, D3Mixins, ChartViews, EnlargementControlsView, EnlargementTemplate)->
+], (Backbone, _, RaTriangle, ChartModels, D3Mixins, ChartViews, EnlargementControlsView, EnlargementTemplate)->
 
 	class EnlargementView extends Backbone.View
 
@@ -19,41 +20,43 @@ define [
 			@_applyMixins D3Mixins
 
 			@$el.html @template { title: 'Enlargement' }
-			@model = @_getSourceModel()
+			@shapeModel = @_getSourceModel()
+			
+			@enlargeShapeModel = new ChartModels.Shape geometry: @shapeModel.get('geometry').toJSON()
 
-			@_diagram = @_makeDiagram @model.get 'geometry'
-			@$el.find('figure').first().append @_diagram.el
+			@_shapeView = @_makeDiagram @shapeModel.get 'geometry'
+			@$el.find('figure').first().append @_shapeView.el
 
 			@_controlsView = @_makeControls()
 			@_controlsView.render()
 
-			@_enlargement = @_makeEnlargement @model.get 'geometry'
-			@_diagram.$el.append @_enlargement.el
+			@_enlargeShapeView = @_makeEnlargement @enlargeShapeModel.get('geometry')
+			@_shapeView.$el.append @_enlargeShapeView.el
 
-			window.enlargementView = @_enlargement
+			@_establishScales @_shapeView, @_shapeView.collection
+			@_linkScales this, @_shapeView, @_enlargeShapeView
 
-			@_establishScales @_diagram, @_diagram.collection
-			@_linkScales this, @_diagram, @_enlargement
-
-			# @_diagram.render()
-			@_drawAxis @_diagram
+			@_drawAxis @_shapeView
 
 		_applyMixins: (mixins...)->
 			_.extend this, mixin for mixin in arguments
 
 		render: ->
 			@_updateEnlargement()
-			@_establishScales @_diagram, @_diagram.collection, @_enlargement.collection
-			@_linkScales this, @_diagram, @_enlargement
+			@_establishScales @_shapeView, @_shapeView.collection, @_enlargeShapeView.collection
+			@_linkScales this, @_shapeView, @_enlargeShapeView
 
-			@_diagram.render()
-			@_enlargement.render()
+			@_shapeView.render()
+			@_enlargeShapeView.render()
 			@_refreshAxis this
 
 		_updateEnlargement: ->
-			enlargedTriangle = @_enlargeTriangle @model, @_scalor
-			enlargedGeometry = enlargedTriangle.get 'geometry'
-			@_enlargement.collection = enlargedGeometry
+			@enlargeShapeModel.get('geometry').reset(@shapeModel.get('geometry').toJSON())
+			@enlargeShapeModel.scale @_scalor, {x:5, y:10}
+
+			# enlargedTriangle = @_enlargeTriangle @shapeModel, @_scalor
+			# enlargedGeometry = enlargedTriangle.get 'geometry'
+			# @_enlargeShapeView.collection = enlargedGeometry
 
 		_getSourceModel: ->
 			if @options.shape_id?
@@ -65,7 +68,7 @@ define [
 			raTri
 
 		_makeControls: ->
-			controlsView = new EnlargementControlsView el: @$el.find('#controls'), model: @model
+			controlsView = new EnlargementControlsView el: @$el.find('#controls'), model: @shapeModel
 			@listenTo controlsView, 'update', (scalor)=>
 				unless isNaN(scalor)
 					@_scalor = scalor
@@ -141,8 +144,6 @@ define [
 				diagram.yScale parent.yScale()
 
 		_enlargeTriangle: (triangle, scale)->
-			console.log "Scaling triangle"
-
 			newTri = new RaTriangle
 				dx: triangle.attributes.dx * scale
 				dy: triangle.attributes.dy * scale
@@ -161,4 +162,6 @@ define [
 				}
 			console.log "Enlarged geometry: "
 			console.log newGeometry
+
+
 
