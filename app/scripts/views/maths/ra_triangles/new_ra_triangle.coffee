@@ -18,16 +18,12 @@ define [
 			@_diagramView = @_makeDiagram()
 			@_diagramView.clampBoundsToWidth()
 			@_diagramView.render()
-
 			@listenTo @formView, 'update', @render
-
-			window.myshape = @model
-			window.mydiagram = @_diagramView
 
 		render: ->
 			@formView.render().el
 			# force a reset on the geometry
-			myGeo = @model.get 'geometry'
+			@_diagramView.collection = @model.get 'geometry'
 			@_diagramView.clampBoundsToWidth()
 			@_refreshAxis()
 
@@ -35,7 +31,6 @@ define [
 
 		_getTriangleInstance: ->
 			if @options.shape_id?
-				console.log "Requested shape = "+ @options.shape_id
 				raTri = new RaTriangle { id: @options.shape_id }
 				raTri.fetch()
 			else
