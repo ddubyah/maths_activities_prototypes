@@ -15,6 +15,8 @@ define [
 			padding: 30	
 			transitionDuration: 500
 			transitionEase: 'elastic'
+			line: true
+			pointStyle: 'circle'
 		}
 				
 		initialize: ->
