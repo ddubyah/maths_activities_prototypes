@@ -22,8 +22,8 @@ define [
 			dx *= scalor
 			dy *= scalor
 
-			@set 'x', origin.x + dx
-			@set 'y', origin.y + dy
+			@set 'x', Number(origin.x) + dx
+			@set 'y', Number(origin.y) + dy 
 
 		validate: (attrs, options)->
 			console.log "Validating point: "

@@ -3,6 +3,7 @@
 
 $fills: #7ECEFD;
 $strokes: #2185C5;
+$grey: #555;
 @import url('http://fonts.googleapis.com/css?family=Reenie+Beanie');
 
 // .hero-unit {
@@ -15,7 +16,7 @@ body {
 }
 
 figure {
-	font-weight: bold;
+	font-weight: normal;
 	text-shadow: 2px 2px 3px #a3a3a3;
     filter: dropshadow(color=#a3a3a3, offx=2, offy=2);
     min-height: 80px;
@@ -88,6 +89,14 @@ svg .axis line, svg .axis path {
 	fill: none;
 	stroke: $strokes;
 	shape-rendering: 'crisp-edges';
+	font-family: cursive;
+}
+
+svg .axis {
+	font-family: 'Reenie Beanie', cursive;
+	font-size: 1em;
+	stroke: $grey;
+	fill: $grey;
 }
 
 #controls li{

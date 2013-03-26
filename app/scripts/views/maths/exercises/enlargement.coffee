@@ -21,8 +21,9 @@ define [
 
 			@$el.html @template { title: 'Enlargement' }
 			@shapeModel = @_getSourceModel()
-			
 			@enlargeShapeModel = new ChartModels.Shape geometry: @shapeModel.get('geometry').toJSON()
+
+			@_originPoint = new ChartModels.Point x: 0, y: 0
 
 			@_shapeView = @_makeDiagram @shapeModel.get 'geometry'
 			@$el.find('figure').first().append @_shapeView.el
@@ -52,7 +53,7 @@ define [
 
 		_updateEnlargement: ->
 			@enlargeShapeModel.get('geometry').reset(@shapeModel.get('geometry').toJSON())
-			@enlargeShapeModel.scale @_scalor, {x:5, y:10}
+			@enlargeShapeModel.scale @_scalor, @_originPoint.attributes
 
 			# enlargedTriangle = @_enlargeTriangle @shapeModel, @_scalor
 			# enlargedGeometry = enlargedTriangle.get 'geometry'
@@ -68,10 +69,13 @@ define [
 			raTri
 
 		_makeControls: ->
-			controlsView = new EnlargementControlsView el: @$el.find('#controls'), model: @shapeModel
-			@listenTo controlsView, 'update', (scalor)=>
-				unless isNaN(scalor)
-					@_scalor = scalor
+			controlsView = new EnlargementControlsView el: @$el.find('#controls'), model: @shapeModel, origin: @_originPoint
+			@listenTo controlsView, 'update', (event)=>
+				@_originPoint.set x: event.origin.x, y: event.origin.y
+				console.log "New origin"
+				console.log @_originPoint
+				unless isNaN(event.scale)
+					@_scalor = event.scale
 					@render()
 			controlsView
 

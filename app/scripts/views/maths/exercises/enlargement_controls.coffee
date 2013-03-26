@@ -1,7 +1,8 @@
 define [
 	'backbone'
+	'views/charts/index'
 	'templates/maths/exercises/enlargement_form'
-], (Backbone, EnlargementFormTemplate)->
+], (Backbone, ChartViews, EnlargementFormTemplate)->
 
 	class EnlargementFormView extends Backbone.View
 		template: EnlargementFormTemplate
@@ -10,7 +11,7 @@ define [
 			'submit': 'save'
 
 		render: ->
-			@$el.html @template(@model.attributes)
+			@$el.html @template shape: @model.attributes, origin: @options.origin.attributes
 			this
 
 		save: (e)->
@@ -18,5 +19,9 @@ define [
 			# errors = @model.save 
 			# 	dx: Number @$el.find('input[name=dxInput]').val()
 			# 	dy: Number @$el.find('input[name=dyInput]').val()
-			@trigger "update", @$el.find('input[name=scaleInput]').val()
+			@trigger "update", 
+				scale: @$el.find('input[name=scaleInput]').val()
+				origin:
+					x: @$el.find('input[name=originXInput]').val()
+					y: @$el.find('input[name=originYInput]').val()
 			
