@@ -17,6 +17,10 @@ define [
 			transitionEase: 'elastic'
 			path: true
 			pointStyle: 'circle'
+			dragPoints: false
+			decimals: 3
+			symbolSize: (d, i)->
+				65
 		}
 				
 		initialize: (options)->
@@ -27,6 +31,10 @@ define [
 
 			@lineGroup = @makePaddedGroup('line')
 			@pointsGroup = @makePaddedGroup 'points'
+
+			@_pointSymbol = d3.svg.symbol()
+				.type(@options.pointStyle)
+				.size @options.symbolSize
 
 			# @line = @_makeLine @lineGroup
 			# @listenTo @collection, 'change', @render
@@ -44,21 +52,18 @@ define [
 			xscale = @_xScale
 			yscale = @_yScale
 
-			console.log "Creating point symbol"
-
-			symbol = d3.svg.symbol()
-				.type(@options.pointStyle)
-				.size 65
-
-
 			symbols = target.selectAll("path")
 				.data(@collection.models)
 
 			newsymbols = symbols.enter()
 				.append("svg:path")
 				.attr 
-					d: symbol
+					d: @_pointSymbol
 					transform: "scale(2)"
+
+			@_dragHandler = @_dragPointSetup() unless @_dragHandler?
+
+			newsymbols.call @_dragHandler if @options.dragPoints
 				# .attr('r', 2)
 			
 			# newsymbols.on 'mouseover', (d, i)=>
@@ -73,7 +78,7 @@ define [
 				.attr({
 					transform: @_getSymbolTransform 0
 				})
-				.remove()
+				# .remove()
 
 			# symbols.attr transform: @_getSymbolTransform 2
 
@@ -116,6 +121,28 @@ define [
 					d: (d)->
 						lineBuilder(d)
 				}
+
+		_dragPointSetup: ->
+			console.log "Setting up drag"
+			parentView = this
+			xscale = @_xScale
+			yscale = @_yScale
+			options = @options
+			drag = D3.behavior.drag()
+				.on "drag", (d, i)->
+					x = d3.event.x
+					y = d3.event.y
+					mapX = parentView.xScale().invert(x)
+					mapY = parentView.yScale().invert(y)
+					d3.select(this).attr "transform",	"translate(#{x},#{y})"
+					# console.log "translate(#{x},#{y}) - (#{mapX}, #{mapY})"
+					d.set 'x', Number mapX.toFixed(options.decimals)
+					d.set 'y', Number mapY.toFixed(options.decimals)
+
+			drag.on "dragend", (d, i)=>
+				# console.log "Complete"
+				@trigger "dragend", d, i
+			drag
 
 
 

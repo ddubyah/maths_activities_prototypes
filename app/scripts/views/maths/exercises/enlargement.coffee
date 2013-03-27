@@ -14,9 +14,12 @@ define [
 
 		template: EnlargementTemplate
 
-		_scalor: 1
+		defaults: 
+			scalor: 1
+			transitionDuration: 500
 
-		initialize: ->
+		initialize: (options)->
+			@options = _.defaults options, @defaults
 			@_applyMixins D3Mixins
 
 			@$el.html @template { title: 'Enlargement' }
@@ -31,7 +34,7 @@ define [
 			@_shapeView = @_makeShapeView @shapeModel.get 'geometry'
 			@$el.find('figure').first().append @_shapeView.el
 
-			@_controlsView = @_makeControls()
+			@_controlsView = @_makeControlsView()
 			@_controlsView.render()
 
 			@_enlargeShapeView = @_makeEnlargementView @enlargeShapeModel.get('geometry')
@@ -64,7 +67,7 @@ define [
 
 		_updateEnlargement: ->
 			@enlargeShapeModel.get('geometry').reset(@shapeModel.get('geometry').toJSON())
-			@enlargeShapeModel.scale @_scalor, @_originModel.get('geometry').first().attributes
+			@enlargeShapeModel.scale @options.scalor, @_originModel.get('geometry').first().attributes
 
 		_getSourceModel: ->
 			if @options.shape_id?
@@ -75,12 +78,12 @@ define [
 
 			raTri
 
-		_makeControls: ->
-			controlsView = new EnlargementControlsView el: @$el.find('#controls'), model: @shapeModel, origin: @_originModel
+		_makeControlsView: ->
+			controlsView = new EnlargementControlsView el: @$el.find('#controls'), model: @shapeModel, origin: @_originModel, scalor: @options.scalor
 			@listenTo controlsView, 'update', (event)=>
 				@_originModel.get('geometry').first().set x: Number(event.origin.x), y: Number(event.origin.y)
 				unless isNaN(event.scale)
-					@_scalor = event.scale
+					@options.scalor = event.scale
 					@render()
 			controlsView
 
@@ -88,6 +91,7 @@ define [
 			geometryView = new ChartViews.GeometrySVG 
 				collection: geometry
 				className: 'chart'
+				transitionDuration: @options.transitionDuration
 				padding: 50
 				pointStyle: 'circle'
 			geometryView
@@ -99,7 +103,7 @@ define [
 				tagName: 'g'
 				collection: geometry
 				className: 'enlargement'
-				transitionDuration: 2000
+				transitionDuration: @options.transitionDuration
 				pointStyle: 'square'
 				padding: 50
 			enlargementView
@@ -110,7 +114,13 @@ define [
 				collection: shape.get('geometry')
 				className: 'origin'
 				pointStyle: 'cross'
+				dragPoints: true
 				padding: 50
+				symbolSize: ->
+					150
+
+			@listenTo shapeView, "dragend", (d, i)=>
+				@render()
 			shapeView
 
 		_drawAxis: (diagram)->
