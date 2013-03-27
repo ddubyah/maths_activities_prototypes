@@ -106,6 +106,7 @@ define [
 				transitionDuration: @options.transitionDuration
 				pointStyle: 'square'
 				padding: 50
+				dasharray: "5,3"
 			enlargementView
 
 		_makeOriginView: (shape)->

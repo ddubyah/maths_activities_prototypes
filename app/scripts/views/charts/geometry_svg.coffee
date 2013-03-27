@@ -19,6 +19,7 @@ define [
 			pointStyle: 'circle'
 			dragPoints: false
 			decimals: 3
+			dasharray: null
 			symbolSize: (d, i)->
 				65
 		}
@@ -35,9 +36,6 @@ define [
 			@_pointSymbol = d3.svg.symbol()
 				.type(@options.pointStyle)
 				.size @options.symbolSize
-
-			# @line = @_makeLine @lineGroup
-			# @listenTo @collection, 'change', @render
 
 		_applyMixins: (mixins...)->
 			_.extend this, mixin for mixin in arguments
@@ -64,23 +62,12 @@ define [
 			@_dragHandler = @_dragPointSetup() unless @_dragHandler?
 
 			newsymbols.call @_dragHandler if @options.dragPoints
-				# .attr('r', 2)
-			
-			# newsymbols.on 'mouseover', (d, i)=>
-			# 	@trigger "hoverPoint", d, i
-
-			# newsymbols.on 'click', (d, i)=>
-			# 	@trigger "selectPoint", d, i
-				
 
 			symbols.exit().transition()
 				.duration(500)
 				.attr({
 					transform: @_getSymbolTransform 0
 				})
-				# .remove()
-
-			# symbols.attr transform: @_getSymbolTransform 2
 
 			symbols.transition()
 				.duration(@options.transitionDuration)
@@ -110,8 +97,6 @@ define [
 				.append('svg:path')
 				.attr({
 					class: 'shape'
-					# d: (d)->
-					# 	lineBuilder(d)
 					})
 
 			path.transition()
