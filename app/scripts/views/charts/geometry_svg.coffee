@@ -15,12 +15,13 @@ define [
 			padding: 30	
 			transitionDuration: 500
 			transitionEase: 'elastic'
-			line: true
+			path: true
 			pointStyle: 'circle'
 		}
 				
-		initialize: ->
-			super()
+		initialize: (options)->
+			@options = _.defaults options, @defaults
+
 			# NB - If you can't find it here, look in the 
 			@_applyMixins D3Mixins
 
@@ -36,46 +37,65 @@ define [
 		render: ->
 			@_setCanvasHeightByXScale()
 			@_drawPoints(@pointsGroup)
-			@_drawLine(@lineGroup)
+			@_drawLine(@lineGroup) if @options.path
 			this
 
 		_drawPoints: (target=(D3.select(@el)))->
 			xscale = @_xScale
 			yscale = @_yScale
 
-			circles = target.selectAll('circle')
+			console.log "Creating point symbol"
+
+			symbol = d3.svg.symbol()
+				.type(@options.pointStyle)
+				.size 65
+
+
+			symbols = target.selectAll("path")
 				.data(@collection.models)
 
-			newCircles = circles.enter()
-				.append('circle')
-				.attr('r', 2)
+			newsymbols = symbols.enter()
+				.append("svg:path")
+				.attr 
+					d: symbol
+					transform: "scale(2)"
+				# .attr('r', 2)
 			
-			newCircles.on 'mouseover', (d, i)=>
-				@trigger "hoverPoint", d, i
+			# newsymbols.on 'mouseover', (d, i)=>
+			# 	@trigger "hoverPoint", d, i
 
-			newCircles.on 'click', (d, i)=>
-				@trigger "selectPoint", d, i
+			# newsymbols.on 'click', (d, i)=>
+			# 	@trigger "selectPoint", d, i
 				
-			circles.attr 'r': 8
 
-			circles.exit().transition()
+			symbols.exit().transition()
 				.duration(500)
 				.attr({
-					r: 0
+					transform: @_getSymbolTransform 0
 				})
 				.remove()
 
-			circles.transition()
+			# symbols.attr transform: @_getSymbolTransform 2
+
+			symbols.transition()
 				.duration(@options.transitionDuration)
 				.ease(@options.transitionEase)
-				.attr({
-						cx: (d)->
-							xscale d.get('x')
-						cy: (d)->
-							yscale d.get('y')
-						r: 4
-						class: 'point'
-					})
+				.attr {
+					class: 'point'
+					transform: @_getSymbolTransform 1
+				}
+
+
+		_getSymbolTransform: (scale = 1)->
+			xscale = @_xScale
+			yscale = @_yScale
+
+			transformFunction = (d, i)->
+				x = xscale d.get('x')
+				y = yscale d.get('y')
+				"translate(#{x}, #{y}) scale(1)"
+
+			return transformFunction
 
 		_drawLine: (target=(D3.select(@el)))->
 			lineBuilder = @_makeLineBuilder()

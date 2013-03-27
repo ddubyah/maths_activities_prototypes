@@ -11,7 +11,7 @@ define [
 			'submit': 'save'
 
 		render: ->
-			@$el.html @template shape: @model.attributes, origin: @options.origin.attributes
+			@$el.html @template shape: @model.attributes, origin: @options.origin.get('geometry').first().attributes
 			this
 
 		save: (e)->

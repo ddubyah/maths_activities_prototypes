@@ -23,19 +23,29 @@ define [
 			@shapeModel = @_getSourceModel()
 			@enlargeShapeModel = new ChartModels.Shape geometry: @shapeModel.get('geometry').toJSON()
 
-			@_originPoint = new ChartModels.Point x: 0, y: 0
+			@_originModel = new ChartModels.Shape 
+				geometry: [
+					{x: 0, y: 0, label: 'origin'}
+				]
 
-			@_shapeView = @_makeDiagram @shapeModel.get 'geometry'
+			@_shapeView = @_makeShapeView @shapeModel.get 'geometry'
 			@$el.find('figure').first().append @_shapeView.el
 
 			@_controlsView = @_makeControls()
 			@_controlsView.render()
 
-			@_enlargeShapeView = @_makeEnlargement @enlargeShapeModel.get('geometry')
+			@_enlargeShapeView = @_makeEnlargementView @enlargeShapeModel.get('geometry')
 			@_shapeView.$el.append @_enlargeShapeView.el
 
-			@_establishScales @_shapeView, @_shapeView.collection
-			@_linkScales this, @_shapeView, @_enlargeShapeView
+			@_originView = @_makeOriginView @_originModel
+			@_shapeView.$el.append @_originView.el
+
+			window.shapeView = @_shapeView
+			window.enlargehapeView = @_enlargeShapeView
+			window.originView = @_originView
+
+			@_establishScales @_shapeView, @_shapeView.collection, @_originView.collection
+			@_linkScales this, @_shapeView, @_enlargeShapeView, @_originView
 
 			@_drawAxis @_shapeView
 
@@ -44,20 +54,17 @@ define [
 
 		render: ->
 			@_updateEnlargement()
-			@_establishScales @_shapeView, @_shapeView.collection, @_enlargeShapeView.collection
-			@_linkScales this, @_shapeView, @_enlargeShapeView
+			@_establishScales @_shapeView, @_shapeView.collection, @_enlargeShapeView.collection, @_originView.collection
+			@_linkScales this, @_shapeView, @_enlargeShapeView, @_originView
 
 			@_shapeView.render()
 			@_enlargeShapeView.render()
+			@_originView.render()
 			@_refreshAxis this
 
 		_updateEnlargement: ->
 			@enlargeShapeModel.get('geometry').reset(@shapeModel.get('geometry').toJSON())
-			@enlargeShapeModel.scale @_scalor, @_originPoint.attributes
-
-			# enlargedTriangle = @_enlargeTriangle @shapeModel, @_scalor
-			# enlargedGeometry = enlargedTriangle.get 'geometry'
-			# @_enlargeShapeView.collection = enlargedGeometry
+			@enlargeShapeModel.scale @_scalor, @_originModel.get('geometry').first().attributes
 
 		_getSourceModel: ->
 			if @options.shape_id?
@@ -69,32 +76,42 @@ define [
 			raTri
 
 		_makeControls: ->
-			controlsView = new EnlargementControlsView el: @$el.find('#controls'), model: @shapeModel, origin: @_originPoint
+			controlsView = new EnlargementControlsView el: @$el.find('#controls'), model: @shapeModel, origin: @_originModel
 			@listenTo controlsView, 'update', (event)=>
-				@_originPoint.set x: event.origin.x, y: event.origin.y
-				console.log "New origin"
-				console.log @_originPoint
+				@_originModel.get('geometry').first().set x: Number(event.origin.x), y: Number(event.origin.y)
 				unless isNaN(event.scale)
 					@_scalor = event.scale
 					@render()
 			controlsView
 
-		_makeDiagram: (geometry)->
+		_makeShapeView: (geometry)->
 			geometryView = new ChartViews.GeometrySVG 
 				collection: geometry
 				className: 'chart'
 				padding: 50
-
+				pointStyle: 'circle'
 			geometryView
 
-		_makeEnlargement: (geometry)->
+
+
+		_makeEnlargementView: (geometry)->
 			enlargementView = new ChartViews.GeometrySVG
 				tagName: 'g'
 				collection: geometry
 				className: 'enlargement'
 				transitionDuration: 2000
+				pointStyle: 'square'
 				padding: 50
 			enlargementView
+
+		_makeOriginView: (shape)->
+			shapeView = new ChartViews.GeometrySVG
+				tagName: 'g'
+				collection: shape.get('geometry')
+				className: 'origin'
+				pointStyle: 'cross'
+				padding: 50
+			shapeView
 
 		_drawAxis: (diagram)->
 			console.log "Creating axis"
