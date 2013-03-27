@@ -37,7 +37,7 @@ define [
 			@_controlsView = @_makeControlsView()
 			@_controlsView.render()
 
-			@_enlargeShapeView = @_makeEnlargementView @enlargeShapeModel.get('geometry')
+			@_enlargeShapeView = @_makeEnlargementView @enlargeShapeModel.get('geometry'), @shapeModel.get('geometry')
 			@_shapeView.$el.append @_enlargeShapeView.el
 
 			@_originView = @_makeOriginView @_originModel
@@ -98,15 +98,17 @@ define [
 
 
 
-		_makeEnlargementView: (geometry)->
+		_makeEnlargementView: (geometry, geometry2)->
 			enlargementView = new ChartViews.GeometrySVG
+			# enlargementView = new ChartViews.PathsSVG
 				tagName: 'g'
 				collection: geometry
+				collections: [geometry2]
 				className: 'enlargement'
 				transitionDuration: @options.transitionDuration
 				pointStyle: 'square'
 				padding: 50
-				dasharray: "5,3"
+				interpolation: 'linear-closed'
 			enlargementView
 
 		_makeOriginView: (shape)->

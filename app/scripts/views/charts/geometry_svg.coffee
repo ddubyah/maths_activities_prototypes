@@ -17,6 +17,8 @@ define [
 			transitionEase: 'elastic'
 			path: true
 			pointStyle: 'circle'
+			points: true
+			lines: true
 			dragPoints: false
 			decimals: 3
 			dasharray: null
@@ -32,6 +34,7 @@ define [
 
 			@lineGroup = @makePaddedGroup('line')
 			@pointsGroup = @makePaddedGroup 'points'
+			@_lineBuilder = @_makeLineBuilder()
 
 			@_pointSymbol = d3.svg.symbol()
 				.type(@options.pointStyle)
@@ -42,16 +45,16 @@ define [
 
 		render: ->
 			@_setCanvasHeightByXScale()
-			@_drawPoints(@pointsGroup)
-			@_drawLine(@lineGroup) if @options.path
+			@_drawPoints(@pointsGroup, @collection.models) if @options.points
+			@_drawLine(@lineGroup, @collection.models, @_lineBuilder) if @options.path
 			this
 
-		_drawPoints: (target=(D3.select(@el)))->
+		_drawPoints: (target=(D3.select(@el)), points)->
 			xscale = @_xScale
 			yscale = @_yScale
 
 			symbols = target.selectAll("path")
-				.data(@collection.models)
+				.data(points)
 
 			newsymbols = symbols.enter()
 				.append("svg:path")
@@ -89,9 +92,9 @@ define [
 
 			return transformFunction
 
-		_drawLine: (target=(D3.select(@el)))->
-			lineBuilder = @_makeLineBuilder()
-			path = target.selectAll('path').data([@collection.models])
+		_drawLine: (target=(D3.select(@el)), points, lineBuilder)->
+			
+			path = target.selectAll('path').data([points])
 
 			path.enter()
 				.append('svg:path')
@@ -134,13 +137,14 @@ define [
 		_makeLineBuilder: ()->
 			xscale = @_xScale
 			yscale = @_yScale
+			parentGeometry = this
 
 			lineBuilder = d3.svg.line()
 			lineBuilder.x (d)->
-					xscale d.get('x')
+				parentGeometry.xScale() d.get('x')
 
 			lineBuilder.y (d)->
-					yscale d.get('y')
+				parentGeometry.yScale() d.get('y')
 
 			lineBuilder.interpolate "linear-closed"
 

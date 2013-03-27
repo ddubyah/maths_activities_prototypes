@@ -68,7 +68,7 @@ article {
 	fill-opacity: 0.2;
 }
 
-.enlargement path.shape {
+.enlargement path.shape, .pathGeometry {
 	stroke: $strokes;
 	stroke-dasharray: 5px, 6px;
 	fill: darkred;
