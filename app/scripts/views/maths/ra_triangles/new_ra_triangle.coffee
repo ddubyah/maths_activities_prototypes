@@ -61,7 +61,7 @@ define [
 			geometryView
 
 		_drawAxis: (diagram)->
-			console.log "Creating axis"
+			 # console.log "Creating axis"
 			@xAxis = @_makeAxis {
 				scale: diagram.xScale()
 				padding: diagram.padding()
@@ -79,7 +79,7 @@ define [
 
 
 		_makeAxis: (options)->
-			console.log "New axis with "+ options
+			 # console.log "New axis with "+ options
 			myAxis = new ChartViews.AxisSVG options
 			myAxis.render()
 			myAxis

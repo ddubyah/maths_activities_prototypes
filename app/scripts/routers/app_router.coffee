@@ -39,7 +39,7 @@ define [
 			raTriangleBuilder.render()
 
 		mathsEnlargements: (shape_id)->
-			console.log "Enlargements!"
+			 # console.log "Enlargements!"
 			enlargementView = new MathViews.Exercises.Enlargement el: $('#app'), shape_id: shape_id, scalor: 2, transitionDuration: 1500
 			enlargementView.render()
 

@@ -39,12 +39,12 @@ define [
 
 		_clearViews: ->
 			while oldView = @_activeViews.pop()
-				console.log "Removing view "+ oldView
+				 # console.log "Removing view "+ oldView
 				@stopListening oldView
 				oldView.remove()
 
 		_resetViews: ()->
-			console.log "Reseting views after updpate"
+			 # console.log "Reseting views after updpate"
 			if @_editView
 				@stopListening @_editView 
 				delete @_editView

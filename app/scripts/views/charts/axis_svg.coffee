@@ -43,8 +43,8 @@ define [
 			return this
 
 		translate: (x=0, y=0)->
-			console.log "Translating %d, %d", x, y
-			console.log @options.transitionDuration
+			 # console.log "Translating %d, %d", x, y
+			 # console.log @options.transitionDuration
 			D3.select(@el).transition()
 				.duration(@options.transitionDuration)
 				.ease(@options.transitionEase)

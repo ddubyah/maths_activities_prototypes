@@ -26,7 +26,7 @@ define [
 			@set 'y', Number(origin.y) + dy 
 
 		validate: (attrs, options)->
-			console.log "Validating point: "
+			 # console.log "Validating point: "
 			return "x and y coordinates must be numeric" if isNaN(attrs.x) or isNaN(attrs.y)
 			return null
 

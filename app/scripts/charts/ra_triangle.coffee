@@ -6,7 +6,7 @@ class RATriangle
   _yScale: null
 
   constructor: (@stage) ->
-    console.log "New triangle required!!! %s", d3
+     # console.log "New triangle required!!! %s", d3
 
   xScale: (d3Scale)->
     return @_xScale if !arguments.length
@@ -17,7 +17,7 @@ class RATriangle
     @_yScale = d3Scale
 
   draw: (data)->
-    console.log "Drawing"
+     # console.log "Drawing"
     @data = data
     @stage.append('rect')
       .attr {

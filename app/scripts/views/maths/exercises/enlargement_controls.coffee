@@ -35,6 +35,6 @@ define [
 					y: @$el.find('input[name=originYInput]').val()
 			
 		_listenToOriginChanges: ->
-			console.log "Listening for changes to the origin"
+			 # console.log "Listening for changes to the origin"
 			@listenTo @options.origin.get('geometry'), 'change', (e)=>
 				@render()

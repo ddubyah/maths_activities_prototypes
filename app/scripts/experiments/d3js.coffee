@@ -22,7 +22,7 @@ jQuery ->
 		.attr('width', '420px')
 		.attr('height', 20 * data.length)
 
-	console.log "Fig 1 height: %d", 20 * data.length
+	 # console.log "Fig 1 height: %d", 20 * data.length
 
 	fig1.selectAll('rect')
 		.data(data)
@@ -149,7 +149,7 @@ jQuery ->
 		gyAxis.transition()
 			.duration(500)
 			.ease('linear').call yAxis
-		console.log "updating"	
+		 # console.log "updating"	
 		circles.data(data)
 			.enter().append('circle')
 
@@ -190,7 +190,7 @@ jQuery ->
 	# 				})
 	# 		.append('text')
 	# 		.text( (d)->
-	# 			console.log "(%d, %d) -> (#{xScale d.x}, #{yScale d.y})", d.x, d.y
+	# 			 # console.log "(%d, %d) -> (#{xScale d.x}, #{yScale d.y})", d.x, d.y
 	# 			"(#{d.x}, #{d.y})"
 	# 		)
 	# 		.attr({

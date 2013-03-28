@@ -38,7 +38,7 @@ define [
 
 
 		_addNewGeometry: (newGroups)->
-			console.log "Adding groups"
+			 # console.log "Adding groups"
 			newGroups.append("svg:g")
 				.attr class: 'pathGeometry'
 

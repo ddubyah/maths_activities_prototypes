@@ -111,7 +111,7 @@ define [
 				}
 
 		_dragPointSetup: ->
-			console.log "Setting up drag"
+			 # console.log "Setting up drag"
 			parentView = this
 			xscale = @_xScale
 			yscale = @_yScale
@@ -124,13 +124,13 @@ define [
 					mapX = parentView.xScale().invert(x)
 					mapY = parentView.yScale().invert(y)
 					d3.select(this).attr "transform",	"translate(#{x},#{y})"
-					# console.log "translate(#{x},#{y}) - (#{mapX}, #{mapY})"
+					#  # console.log "translate(#{x},#{y}) - (#{mapX}, #{mapY})"
 					d.set 'x', Number mapX.toFixed(options.decimals)
 					d.set 'y', Number mapY.toFixed(options.decimals)
 					# parentView.trigger "drag", this, d, i
 
 			drag.on "dragend", (d, i)->
-				# console.log "Complete"
+				#  # console.log "Complete"
 				parentView.trigger "dragend", this, d, i
 			drag
 

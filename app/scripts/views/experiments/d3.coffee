@@ -14,14 +14,14 @@ define [
 
 		events: {
 			'click': (e)->
-				console.log "Whoop"
+				 # console.log "Whoop"
 				@_movePoints 5
 				@_drawPoints()
 		}
 
 		initialize: ->
 			window.d3 = d3
-			console.log "Creating new d3 view"
+			 # console.log "Creating new d3 view"
 			@collection = @_makeGeo()	
 			@chart = @_makeChart()
 			@_makeLine()
@@ -109,7 +109,7 @@ define [
 			chart
 
 		_updateScales: ->
-			console.log "Updating Scales"
+			 # console.log "Updating Scales"
 			models = @collection.models
 			xMax = d3.max models, (d)->
 				d.get 'x'
@@ -132,7 +132,7 @@ define [
 			
 
 		makeScale: (domain, range)->
-			console.log "scaling #{domain} to #{range}"
+			 # console.log "scaling #{domain} to #{range}"
 			d3.scale.linear()
 				.domain(domain)
 				.range(range)

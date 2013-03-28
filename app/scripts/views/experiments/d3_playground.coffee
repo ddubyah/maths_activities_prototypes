@@ -26,7 +26,7 @@ define [
 
 			
 		render: ->
-			console.log "Rendering"
+			 # console.log "Rendering"
 			@$el.html @template { title: 'D3 Playground' }
 			@_createDiagram()			
 			@_createControls()
@@ -43,7 +43,7 @@ define [
 				@_createControls()
 
 			@listenTo @geometrySvg, 'hoverPoint', (point)->
-				console.log "%s hovererd", point.get 'label'
+				 # console.log "%s hovererd", point.get 'label'
 			# @listenTo @geometrySvg, 'clickPoint'
 			@_createAxis()
 
@@ -86,14 +86,14 @@ define [
 			myAxis
 
 		_positionAxis: =>
-			console.log "Posistioning axis"
+			 # console.log "Posistioning axis"
 			@xAxis.translate( 0, @geometrySvg.yScale()(0))
 			@yAxis.translate( @geometrySvg.xScale()(0), 0 )
 			@xAxis.render @geometrySvg.xScale()
 			@yAxis.render @geometrySvg.yScale()
 
 		_renderDiagram: =>
-			console.log "Rendering!"
+			 # console.log "Rendering!"
 			@geometrySvg.calculateScales()
 			@geometrySvg.render()
 
@@ -103,18 +103,18 @@ define [
 
 		_saveGeometry: (e)=>
 			e.preventDefault() if e?
-			console.log @sampleGeometry
+			 # console.log @sampleGeometry
 			@sampleGeometry.forEach (point)->
 				point.save()
 			# 
 		_loadGeometry: (e)=>
 			e.preventDefault() if e?
-			console.log "Loading"
+			 # console.log "Loading"
 			@sampleGeometry.fetch()
 
 		_resetGeometry: (e)=>
 			e.preventDefault() if e?
-			console.log "Reseting"
+			 # console.log "Reseting"
 			# @sampleGeometry.invoke 'destroy'
 			while aPoint = @sampleGeometry.first()
 				aPoint.destroy()

@@ -44,7 +44,7 @@ define [
 			yMin = @getMinModelProperty 'y'
 
 			extent = D3.extent [xMax, yMax, xMin, yMin]
-			console.log "Full extent = "+ extent
+			 # console.log "Full extent = "+ extent
 			window.extent = extent
 			@_ensureScale @xScale, extent, [0, paddedWidth]
 			@_ensureScale @yScale, extent.reverse(), [0, paddedWidth]
@@ -61,7 +61,7 @@ define [
 				d.get modelProperty
 
 			if ensureZero
-				console.log "Forcing minimum"
+				 # console.log "Forcing minimum"
 				min = D3.min [min, 0]
 			min
 
@@ -71,12 +71,12 @@ define [
 
 		xScale: (aScale)->
 			return @_xScale unless arguments.length 
-			console.log "Setting x scale"
+			 # console.log "Setting x scale"
 			@_xScale = aScale		
 
 		yScale: (aScale)->
 			return @_yScale unless arguments.length 
-			console.log "Setting y scale "+ aScale
+			 # console.log "Setting y scale "+ aScale
 			@_yScale = aScale
 
 		getPaddedDimensions: ->
@@ -96,14 +96,14 @@ define [
 			@$el.height dy
 
 		_makeScale: (domain, range)->
-			console.log "Making scale for %s -> %s", domain.toString(), range.toString()
+			 # console.log "Making scale for %s -> %s", domain.toString(), range.toString()
 			D3.scale.linear()
 				.domain(domain)
 				.rangeRound(range)
 				.nice()
 
 		_updateScale: (scale, domain, range)->
-			console.log "Updating scale for %s -> %s", domain.toString(), range.toString()
+			 # console.log "Updating scale for %s -> %s", domain.toString(), range.toString()
 			scale.domain domain
 			scale.rangeRound range
 
@@ -112,10 +112,10 @@ define [
 
 		_ensureScale: (scaleGetter, domain, range)->
 			if scaleGetter()
-				console.log "Updating scale to ensure"
+				 # console.log "Updating scale to ensure"
 				@_updateScale scaleGetter(), domain, range
 			else
-				console.log "Creating scale to ensure"
+				 # console.log "Creating scale to ensure"
 				scaleGetter.call this, @_makeScale(domain, range)
 
 	}

@@ -149,7 +149,7 @@ define [
 
 
 		_drawAxis: (diagram)->
-			console.log "Creating axis"
+			 # console.log "Creating axis"
 			@xAxis = @_makeAxis {
 				scale: diagram.xScale()
 				padding: diagram.padding()
@@ -165,7 +165,7 @@ define [
 			diagram.$el.append @yAxis.el
 
 		_makeAxis: (options)->
-			console.log "New axis with "+ options
+			 # console.log "New axis with "+ options
 			myAxis = new ChartViews.AxisSVG options
 			myAxis.render()
 			myAxis
@@ -181,8 +181,8 @@ define [
 			allValues = []
 
 			for geo in geometries
-				console.log "Plucking"
-				console.log geo
+				 # console.log "Plucking"
+				 # console.log geo
 				xs = geo.pluck 'x'
 				ys = geo.pluck 'y'
 				allValues = allValues.concat(xs).concat(ys)
@@ -206,8 +206,8 @@ define [
 
 		_enlargeGeometry: (geometry, scale)->
 			sourceGeo = geometry.toJSON()
-			console.log "Source geometry: "
-			console.log sourceGeo
+			 # console.log "Source geometry: "
+			 # console.log sourceGeo
 			newGeometry = []
 			for geo in sourceGeo
 				newGeometry = newGeometry.concat {
@@ -215,11 +215,11 @@ define [
 					x: geo.x * scale
 					y: geo.y * scale
 				}
-			console.log "Enlarged geometry: "
-			console.log newGeometry
+			 # console.log "Enlarged geometry: "
+			 # console.log newGeometry
 
 		_onOriginChange: ()->
-			# console.log "Whoop! %s", @_originModel.attributes
+			#  # console.log "Whoop! %s", @_originModel.attributes
 			@_connectionsView.render(0)
 
 

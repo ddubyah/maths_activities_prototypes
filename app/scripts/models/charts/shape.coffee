@@ -29,7 +29,7 @@ define [
 				point.translate dx, dy
 
 		scale: (scalor, origin={x:0, y:0})->
-			console.log "Scaling"
+			 # console.log "Scaling"
 			for point in @get('geometry').models
 				point.scale scalor, origin
 

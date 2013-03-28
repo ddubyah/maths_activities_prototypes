@@ -28,8 +28,8 @@ require.config
 
 require ["jquery", "./routers/app_router"], ($, AppRouter) ->
 	"use strict"
-	# console.log "Running jQuery %s", $().jquery
-	console.log "Starting Maths App"
+	#  # console.log "Running jQuery %s", $().jquery
+	 # console.log "Starting Maths App"
 	$ ->
 		window.app = AppRouter
 		AppRouter.initialize()
