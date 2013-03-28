@@ -14,16 +14,17 @@ define [
 			transitionDuration: 500
 			transitionEase: 'elastic'
 			interpolation: 'linear-closed'
+			padding: 50
 			collections: []
 
 		initialize: (options)->
 			@options = _.defaults options, @defaults
-			@options.collections = @options.collections.concat @collection
+			@options.collections = @options.collections.concat @collection unless @options.collections.length
 			_.extend this, D3Mixins
 			@_lineBuilder = @_makeLinebuilder()
 			@parentGroup = @makePaddedGroup 'pathsSvgView'
 
-		render: ->
+		render: (duration)->
 			geometryGroups = @parentGroup.selectAll("g").data(@options.collections)
 				
 			newGeometryGroups = geometryGroups.enter()
@@ -32,7 +33,7 @@ define [
 			@_addNewGeometry newGeometryGroups
 			@_removeOldGeometry oldGeometryGroups
 
-			@_drawPaths geometryGroups
+			@_drawPaths geometryGroups, duration
 
 
 
@@ -48,14 +49,19 @@ define [
 					opacity: 0
 				}).remove()
 
-		_drawPaths: (geometryGroups)->
+		_drawPaths: (geometryGroups, duration=@options.transitionDuration)->
 			lineBuilder = @_lineBuilder
-			duration = @options.transitionDuration
+			# duration = duration || @options.transitionDuration
 			ease = @options.transitionEase
 
 			geometryGroups.each (d,i)->
 				path = d3.select(this)
 					.selectAll('path').data([d.models])
+
+				targetAttributes = 
+					d: (d)->
+						lineBuilder(d)
+				
 
 				path.enter()
 					.append('svg:path')
@@ -63,13 +69,13 @@ define [
 						class: "geometryPath_#{i}"
 						})
 
-				path.transition()
-					.duration(duration)
-					.ease(ease)
-					.attr {
-						d: (d)->
-							lineBuilder(d)
-					}
+				unless duration is 0
+					path.transition()
+						.duration(duration)
+						.ease(ease)
+						.attr targetAttributes
+				else
+					path.attr targetAttributes
 
 		_makeLinebuilder: ->
 			parentGeometry = this

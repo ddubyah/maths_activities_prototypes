@@ -116,6 +116,7 @@ define [
 			xscale = @_xScale
 			yscale = @_yScale
 			options = @options
+			parentView = this
 			drag = D3.behavior.drag()
 				.on "drag", (d, i)->
 					x = d3.event.x
@@ -126,10 +127,11 @@ define [
 					# console.log "translate(#{x},#{y}) - (#{mapX}, #{mapY})"
 					d.set 'x', Number mapX.toFixed(options.decimals)
 					d.set 'y', Number mapY.toFixed(options.decimals)
+					# parentView.trigger "drag", this, d, i
 
-			drag.on "dragend", (d, i)=>
+			drag.on "dragend", (d, i)->
 				# console.log "Complete"
-				@trigger "dragend", d, i
+				parentView.trigger "dragend", this, d, i
 			drag
 
 

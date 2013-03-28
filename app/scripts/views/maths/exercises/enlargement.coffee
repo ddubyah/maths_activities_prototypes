@@ -31,24 +31,30 @@ define [
 					{x: 0, y: 0, label: 'origin'}
 				]
 
+			@listenTo @_originModel.get('geometry'), 'change', @_onOriginChange
+
 			@_shapeView = @_makeShapeView @shapeModel.get 'geometry'
 			@$el.find('figure').first().append @_shapeView.el
 
 			@_controlsView = @_makeControlsView()
 			@_controlsView.render()
 
-			@_enlargeShapeView = @_makeEnlargementView @enlargeShapeModel.get('geometry'), @shapeModel.get('geometry')
+			@_enlargeShapeView = @_makeEnlargementView @enlargeShapeModel.get('geometry')
 			@_shapeView.$el.append @_enlargeShapeView.el
 
 			@_originView = @_makeOriginView @_originModel
+			@_connectionsView = @_makeConnectorsView @_makeConnectorsGeometry()
+			@_shapeView.$el.append @_connectionsView.el
 			@_shapeView.$el.append @_originView.el
+
 
 			window.shapeView = @_shapeView
 			window.enlargehapeView = @_enlargeShapeView
 			window.originView = @_originView
+			window.connectionsView = @_connectionsView
 
 			@_establishScales @_shapeView, @_shapeView.collection, @_originView.collection
-			@_linkScales this, @_shapeView, @_enlargeShapeView, @_originView
+			@_linkScales this, @_shapeView, @_enlargeShapeView, @_originView, @_connectionsView
 
 			@_drawAxis @_shapeView
 
@@ -58,11 +64,13 @@ define [
 		render: ->
 			@_updateEnlargement()
 			@_establishScales @_shapeView, @_shapeView.collection, @_enlargeShapeView.collection, @_originView.collection
-			@_linkScales this, @_shapeView, @_enlargeShapeView, @_originView
+			@_linkScales this, @_shapeView, @_enlargeShapeView, @_originView, @_connectionsView
+			@_connectionsView.options.collections = @_makeConnectorsGeometry()
 
 			@_shapeView.render()
 			@_enlargeShapeView.render()
 			@_originView.render()
+			@_connectionsView.render()
 			@_refreshAxis this
 
 		_updateEnlargement: ->
@@ -75,7 +83,6 @@ define [
 				raTri.fetch()
 			else
 				raTri = new RaTriangle()
-
 			raTri
 
 		_makeControlsView: ->
@@ -96,14 +103,11 @@ define [
 				pointStyle: 'circle'
 			geometryView
 
-
-
-		_makeEnlargementView: (geometry, geometry2)->
+		_makeEnlargementView: (geometry)->
 			enlargementView = new ChartViews.GeometrySVG
 			# enlargementView = new ChartViews.PathsSVG
 				tagName: 'g'
 				collection: geometry
-				collections: [geometry2]
 				className: 'enlargement'
 				transitionDuration: @options.transitionDuration
 				pointStyle: 'square'
@@ -126,6 +130,24 @@ define [
 				@render()
 			shapeView
 
+		_makeConnectorsView: (geometries)->
+			joinsView = new ChartViews.PathsSVG
+				className: 'pointConnectors'
+				transitionDuration: @options.transitionDuration
+				interpolation: 'cardinal'
+				collections: geometries
+			joinsView
+
+		_makeConnectorsGeometry: ()->
+			# connect from origin through the shape and enlargement points
+			connections = for point, index in @shapeModel.get('geometry').models
+				originPoint = @_originModel.get('geometry').at 0
+				shapePoint = point
+				enlargementPoint = @enlargeShapeModel.get('geometry').at index
+				connection = new ChartModels.Geometry [originPoint, shapePoint, enlargementPoint]
+			connections
+
+
 		_drawAxis: (diagram)->
 			console.log "Creating axis"
 			@xAxis = @_makeAxis {
@@ -141,7 +163,6 @@ define [
 			}
 			diagram.$el.append @xAxis.el
 			diagram.$el.append @yAxis.el
-
 
 		_makeAxis: (options)->
 			console.log "New axis with "+ options
@@ -196,6 +217,10 @@ define [
 				}
 			console.log "Enlarged geometry: "
 			console.log newGeometry
+
+		_onOriginChange: ()->
+			# console.log "Whoop! %s", @_originModel.attributes
+			@_connectionsView.render(0)
 
 
 
