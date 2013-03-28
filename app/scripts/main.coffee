@@ -2,7 +2,7 @@ require.config
 	paths:
 		jquery: "../components/jquery/jquery"
 		handlebars: "../components/handlebars/handlebars"
-		bootstrap: "vendor/bootstrap"
+		bootstrap: "./vendor/bootstrap"
 		underscore: "../components/underscore/underscore-min"
 		backbone: "../components/backbone/backbone-min"
 		localStorage: "../components/backbone.localStorage/backbone.localStorage-min"
@@ -26,8 +26,10 @@ require.config
 		d3:
 			exports: "d3"
 
-require ["jquery", "routers/app_router"], ($, AppRouter, _) ->
+require ["jquery", "./routers/app_router"], ($, AppRouter) ->
 	"use strict"
 	# console.log "Running jQuery %s", $().jquery
+	console.log "Starting Maths App"
 	$ ->
+		window.app = AppRouter
 		AppRouter.initialize()

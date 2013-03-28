@@ -1,7 +1,7 @@
 define [
 	"jquery"
 	"backbone"
-	"app"
+	"../app_menu"
 	"views/experiments/d3_playground"
 	"views/experiments/d3"
 	"views/maths/index"

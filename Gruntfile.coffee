@@ -45,7 +45,7 @@ module.exports = (grunt) ->
 
     connect:
       options:
-        port: 9010
+        port: 9000
         
         # change this to '0.0.0.0' to access the server from outside
         hostname: "0.0.0.0"
@@ -216,7 +216,7 @@ module.exports = (grunt) ->
           dot: true
           cwd: "<%= yeoman.app %>"
           dest: ".tmp"
-          src: ["components/{,*/}*.js"]
+          src: ["components/{,*/}*.js", "scripts/vendor/{,*/}*.js"]
         ]
 
     bower:
@@ -243,5 +243,5 @@ module.exports = (grunt) ->
     grunt.task.run ["clean:server", "coffee:dist", "compass:server", "livereload-start", "connect:livereload", "handlebars", "open", "watch"]
 
   grunt.registerTask "test", ["clean:server", "coffee", "handlebars", "compass", "connect:test", "mocha"]
-  grunt.registerTask "build", ["clean:dist", "coffee", "handlebars", "compass:dist", "useminPrepare", "requirejs", "imagemin", "htmlmin", "concat", "cssmin", "uglify", "copy", "usemin"]
+  grunt.registerTask "build", ["clean:dist", "coffee", "handlebars", "compass:dist", "useminPrepare", "copy", "requirejs", "imagemin", "htmlmin", "concat", "cssmin", "uglify", "usemin"]
   grunt.registerTask "default", ["jshint", "test", "build"]
