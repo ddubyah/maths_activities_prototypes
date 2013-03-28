@@ -16,9 +16,9 @@ define [
     		console?.log "Rendering the app"
     		@$el.html indextemplate {
     			links: [
-                    { name: "Experiments in d3", link: "experiments/d3playground", local: true  }
-                    { name: "Right Angled Triangles", link: "maths/ra_triangles", local: true }
-    				{ name: "Enlargement", link: "maths/exercises/enlargement", local: true }
+                    { name: "Experiments in d3", link: "/experiments/d3playground", local: true  }
+                    { name: "Right Angled Triangles", link: "/maths/ra_triangles", local: true }
+    				{ name: "Enlargement", link: "/maths/exercises/enlargement", local: true }
     			]
     		}
 
