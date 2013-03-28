@@ -1,10 +1,11 @@
 define [
 	'backbone'
 	'localStorage'
+	'../charts/shape'
 	'../charts/geometry'
-], (backbone, localStorage, Geometry)->
+], (backbone, localStorage, Shape, Geometry)->
 
-	class RATriangle extends Backbone.Model
+	class RATriangle extends Shape
 		sync: Backbone.localSync
 		localStorage: new Backbone.LocalStorage "raTriangles"
 
@@ -18,22 +19,20 @@ define [
 		_geometry: null
 
 		initialize: ->
-			@_geometry = new Geometry @_makeGeometry()
-
-		get: (attr)->
-			if attr is 'geometry'
-				@_geometry.reset @_makeGeometry()
-				return @_geometry
-			else
-				return @attributes[attr]
+			@set 'geometry': @_makeGeometry()
+			@listenTo this, 'change:dx change:dy', @_updateGeometry
+			window.triangle = this
 
 		validate: (attrs, options)->
 			console.log "Validating raTriangle: "
 			return "dx and dy coordinates must be numeric" if isNaN(attrs.dx) or isNaN(attrs.dy)
 			return null
 
+		_updateGeometry: ->
+			@set {'geometry': @_makeGeometry()}, { silent: true }
 
 		_makeGeometry: ->
+			console.log "Making geometry"
 			dx = @get 'dx'
 			dy = @get 'dy'
 			origin = @get 'origin'
@@ -51,7 +50,7 @@ define [
 				y: y
 			}
 
-		toJSON: ->
-			attrs = @attributes
-			attrs.geometry = @_makeGeometry()
-			attrs
+		# toJSON: ->
+		# 	attrs = @attributes
+		# 	attrs.geometry = @_makeGeometry()
+		# 	attrs

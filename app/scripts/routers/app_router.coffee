@@ -17,7 +17,7 @@ define [
 			"experiments/d3playground": "d3Playground"
 			"experiments/d3tester": "d3tester"
 			"maths/ra_triangles(/:id)(/)": "raTriangle"
-			"maths/exercises/enlargement/:shape_id(/)": "mathsEnlargements"
+			"maths/exercises/enlargement(/:shape_id)(/)": "mathsEnlargements"
 
 			"*path": "index"
 
@@ -40,7 +40,7 @@ define [
 
 		mathsEnlargements: (shape_id)->
 			console.log "Enlargements!"
-			enlargementView = new MathViews.Exercises.Enlargement el: $('#app'), shape_id: shape_id
+			enlargementView = new MathViews.Exercises.Enlargement el: $('#app'), shape_id: shape_id, scalor: 2, transitionDuration: 1500
 			enlargementView.render()
 
 		d3tester: ->

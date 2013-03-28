@@ -22,6 +22,8 @@ define [
 			@geometryControls = new ChartViews.Geometry collection: @sampleGeometry
 			@listenTo @sampleGeometry, 'error', (e)->
 				alert "Error: "+e
+			@_createLabels()
+
 			
 		render: ->
 			console.log "Rendering"
@@ -45,7 +47,6 @@ define [
 			# @listenTo @geometrySvg, 'clickPoint'
 			@_createAxis()
 
-			@_createLabels()
 
 		_createAxis: ->
 			@xAxis = @_makeAxis {
@@ -73,10 +74,10 @@ define [
 				yScale: @geometrySvg.yScale()
 			}
 			@geometrySvg.$el.append @labelsView.el
-			@labelsView.render()
+			# @labelsView.render()
 
-			@listenTo @geometrySvg, 'rescale', =>
-				@labelsView.render()
+			@listenTo @geometrySvg, 'rescale', (xScale, yScale)=>
+				@labelsView.render(xScale, yScale)
 			
 
 		_makeAxis: (options)->
@@ -88,8 +89,8 @@ define [
 			console.log "Posistioning axis"
 			@xAxis.translate( 0, @geometrySvg.yScale()(0))
 			@yAxis.translate( @geometrySvg.xScale()(0), 0 )
-			@xAxis.render()# @geometrySvg.xScale()
-			@yAxis.render()# @geometrySvg.yScale()
+			@xAxis.render @geometrySvg.xScale()
+			@yAxis.render @geometrySvg.yScale()
 
 		_renderDiagram: =>
 			console.log "Rendering!"

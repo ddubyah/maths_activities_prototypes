@@ -23,7 +23,9 @@ define [
 			@xScale @options.xScale
 			@yScale @options.yScale
 
-		render: ->
+		render: (xScale, yScale)->
+			@xScale xScale if xScale?
+			@yScale yScale if yScale?
 			throw new Error('Missing xScale') unless @xScale()
 			throw new Error('Missing yScale') unless @yScale()
 			labels = @textGroup.selectAll('text')

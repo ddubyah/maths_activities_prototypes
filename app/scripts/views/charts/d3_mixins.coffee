@@ -48,6 +48,8 @@ define [
 			window.extent = extent
 			@_ensureScale @xScale, extent, [0, paddedWidth]
 			@_ensureScale @yScale, extent.reverse(), [0, paddedWidth]
+			@trigger 'rescale', @xScale(), @yScale() 
+
 
 		getMaxModelProperty: (modelProperty)->
 			max = D3.max @collection.models, (d)->

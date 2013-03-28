@@ -1,10 +1,22 @@
 <form class="form">
-	<legend>Triangle {{dx}}, {{dy}} <small>(dx, dy)</small>	<small><a href="maths/ra_triangles/{{id}}" class="label label-info" data-local="true">edit triangle</a></small></legend>
+	<legend>Triangle {{shape.dx}}, {{shape.dy}} <small>(dx, dy)</small>	<small><a href="maths/ra_triangles/{{id}}" class="label label-info" data-local="true">edit triangle</a></small></legend>
+
+	<fieldset id="originControls">
+		<legend>Origin Position {{origin.x}}, {{origin.y}}</legend>
+		<div class="input-prepend">
+			<span class="add-on">x</span><input name='originXInput' type="text" class="input-mini" value="{{origin.x}}" size='4'>
+		</div>
+		<div class="input-prepend">
+			<span class="add-on">y</span><input name='originYInput' type="text" class="input-mini" value="{{origin.y}}" size='4'>
+		</div>
+		
+	</fieldset>
 
 	<fieldset>
+		<legend>Scalor Value</legend>
 		<div class="input-prepend">
-			<span class="add-on">scale by</span>
-			<input name='scaleInput' type="text" class="input-small" value="3" size='4'>
+			<span class="add-on">scalor</span>
+			<input name='scaleInput' type="text" class="input-small" value="{{scalor}}" size='4'>
 		</div>
 	</fieldset>
 

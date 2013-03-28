@@ -34,6 +34,8 @@ define [
 		render: (aScale)->
 			if aScale?
 				@axisObject.scale aScale
+			else
+				@axisObject.scale @options.scale
 			@axisGroup.transition()
 				.duration(@options.transitionDuration)
 				.ease(@options.transitionEase)

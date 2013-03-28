@@ -1,8 +1,10 @@
 define [
 	'./point'
 	'./geometry'
-], (Point, Geometry)->
+	'./shape'
+], (Point, Geometry, Shape)->
 	{
 		Point: Point
 		Geometry: Geometry
+		Shape: Shape
 	}

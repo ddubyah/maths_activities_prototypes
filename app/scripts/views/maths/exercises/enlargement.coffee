@@ -2,58 +2,80 @@ define [
 	'backbone'
 	'underscore'
 	'models/maths/ra_triangle'
+	'models/charts/index'
 	'views/charts/d3_mixins'
 	'views/charts/index'
 	'./enlargement_controls'
 	'templates/maths/exercises/enlargement'
 
-], (Backbone, _, RaTriangle, D3Mixins, ChartViews, EnlargementControlsView, EnlargementTemplate)->
+], (Backbone, _, RaTriangle, ChartModels, D3Mixins, ChartViews, EnlargementControlsView, EnlargementTemplate)->
 
 	class EnlargementView extends Backbone.View
 
 		template: EnlargementTemplate
 
-		_scalor: 1
+		defaults: 
+			scalor: 1
+			transitionDuration: 500
 
-		initialize: ->
+		initialize: (options)->
+			@options = _.defaults options, @defaults
 			@_applyMixins D3Mixins
 
 			@$el.html @template { title: 'Enlargement' }
-			@model = @_getSourceModel()
+			@shapeModel = @_getSourceModel()
+			@enlargeShapeModel = new ChartModels.Shape geometry: @shapeModel.get('geometry').toJSON()
 
-			@_diagram = @_makeDiagram @model.get 'geometry'
-			@$el.find('figure').first().append @_diagram.el
+			@_originModel = new ChartModels.Shape 
+				geometry: [
+					{x: 0, y: 0, label: 'origin'}
+				]
 
-			@_controlsView = @_makeControls()
+			@listenTo @_originModel.get('geometry'), 'change', @_onOriginChange
+
+			@_shapeView = @_makeShapeView @shapeModel.get 'geometry'
+			@$el.find('figure').first().append @_shapeView.el
+
+			@_controlsView = @_makeControlsView()
 			@_controlsView.render()
 
-			@_enlargement = @_makeEnlargement @model.get 'geometry'
-			@_diagram.$el.append @_enlargement.el
+			@_enlargeShapeView = @_makeEnlargementView @enlargeShapeModel.get('geometry')
+			@_shapeView.$el.append @_enlargeShapeView.el
 
-			window.enlargementView = @_enlargement
+			@_originView = @_makeOriginView @_originModel
+			@_connectionsView = @_makeConnectorsView @_makeConnectorsGeometry()
+			@_shapeView.$el.append @_connectionsView.el
+			@_shapeView.$el.append @_originView.el
 
-			@_establishScales @_diagram, @_diagram.collection
-			@_linkScales this, @_diagram, @_enlargement
 
-			# @_diagram.render()
-			@_drawAxis @_diagram
+			window.shapeView = @_shapeView
+			window.enlargehapeView = @_enlargeShapeView
+			window.originView = @_originView
+			window.connectionsView = @_connectionsView
+
+			@_establishScales @_shapeView, @_shapeView.collection, @_originView.collection
+			@_linkScales this, @_shapeView, @_enlargeShapeView, @_originView, @_connectionsView
+
+			@_drawAxis @_shapeView
 
 		_applyMixins: (mixins...)->
 			_.extend this, mixin for mixin in arguments
 
 		render: ->
 			@_updateEnlargement()
-			@_establishScales @_diagram, @_diagram.collection, @_enlargement.collection
-			@_linkScales this, @_diagram, @_enlargement
+			@_establishScales @_shapeView, @_shapeView.collection, @_enlargeShapeView.collection, @_originView.collection
+			@_linkScales this, @_shapeView, @_enlargeShapeView, @_originView, @_connectionsView
+			@_connectionsView.options.collections = @_makeConnectorsGeometry()
 
-			@_diagram.render()
-			@_enlargement.render()
+			@_shapeView.render()
+			@_enlargeShapeView.render()
+			@_originView.render()
+			@_connectionsView.render()
 			@_refreshAxis this
 
 		_updateEnlargement: ->
-			enlargedTriangle = @_enlargeTriangle @model, @_scalor
-			enlargedGeometry = enlargedTriangle.get 'geometry'
-			@_enlargement.collection = enlargedGeometry
+			@enlargeShapeModel.get('geometry').reset(@shapeModel.get('geometry').toJSON())
+			@enlargeShapeModel.scale @options.scalor, @_originModel.get('geometry').first().attributes
 
 		_getSourceModel: ->
 			if @options.shape_id?
@@ -61,33 +83,70 @@ define [
 				raTri.fetch()
 			else
 				raTri = new RaTriangle()
-
 			raTri
 
-		_makeControls: ->
-			controlsView = new EnlargementControlsView el: @$el.find('#controls'), model: @model
-			@listenTo controlsView, 'update', (scalor)=>
-				unless isNaN(scalor)
-					@_scalor = scalor
+		_makeControlsView: ->
+			controlsView = new EnlargementControlsView el: @$el.find('#controls'), model: @shapeModel, origin: @_originModel, scalor: @options.scalor
+			@listenTo controlsView, 'update', (event)=>
+				@_originModel.get('geometry').first().set x: Number(event.origin.x), y: Number(event.origin.y)
+				unless isNaN(event.scale)
+					@options.scalor = event.scale
 					@render()
 			controlsView
 
-		_makeDiagram: (geometry)->
+		_makeShapeView: (geometry)->
 			geometryView = new ChartViews.GeometrySVG 
 				collection: geometry
 				className: 'chart'
+				transitionDuration: @options.transitionDuration
 				padding: 50
-
+				pointStyle: 'circle'
 			geometryView
 
-		_makeEnlargement: (geometry)->
+		_makeEnlargementView: (geometry)->
 			enlargementView = new ChartViews.GeometrySVG
+			# enlargementView = new ChartViews.PathsSVG
 				tagName: 'g'
 				collection: geometry
 				className: 'enlargement'
-				transitionDuration: 2000
+				transitionDuration: @options.transitionDuration
+				pointStyle: 'square'
 				padding: 50
+				interpolation: 'linear-closed'
 			enlargementView
+
+		_makeOriginView: (shape)->
+			shapeView = new ChartViews.GeometrySVG
+				tagName: 'g'
+				collection: shape.get('geometry')
+				className: 'origin'
+				pointStyle: 'cross'
+				dragPoints: true
+				padding: 50
+				symbolSize: ->
+					150
+
+			@listenTo shapeView, "dragend", (d, i)=>
+				@render()
+			shapeView
+
+		_makeConnectorsView: (geometries)->
+			joinsView = new ChartViews.PathsSVG
+				className: 'pointConnectors'
+				transitionDuration: @options.transitionDuration
+				interpolation: 'cardinal'
+				collections: geometries
+			joinsView
+
+		_makeConnectorsGeometry: ()->
+			# connect from origin through the shape and enlargement points
+			connections = for point, index in @shapeModel.get('geometry').models
+				originPoint = @_originModel.get('geometry').at 0
+				shapePoint = point
+				enlargementPoint = @enlargeShapeModel.get('geometry').at index
+				connection = new ChartModels.Geometry [originPoint, shapePoint, enlargementPoint]
+			connections
+
 
 		_drawAxis: (diagram)->
 			console.log "Creating axis"
@@ -104,7 +163,6 @@ define [
 			}
 			diagram.$el.append @xAxis.el
 			diagram.$el.append @yAxis.el
-
 
 		_makeAxis: (options)->
 			console.log "New axis with "+ options
@@ -141,8 +199,6 @@ define [
 				diagram.yScale parent.yScale()
 
 		_enlargeTriangle: (triangle, scale)->
-			console.log "Scaling triangle"
-
 			newTri = new RaTriangle
 				dx: triangle.attributes.dx * scale
 				dy: triangle.attributes.dy * scale
@@ -161,4 +217,10 @@ define [
 				}
 			console.log "Enlarged geometry: "
 			console.log newGeometry
+
+		_onOriginChange: ()->
+			# console.log "Whoop! %s", @_originModel.attributes
+			@_connectionsView.render(0)
+
+
 
