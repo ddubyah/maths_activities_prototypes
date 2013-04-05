@@ -45,7 +45,7 @@ module.exports = (grunt) ->
 
     connect:
       options:
-        port: 9000
+        port: 9010
         
         # change this to '0.0.0.0' to access the server from outside
         hostname: "0.0.0.0"
