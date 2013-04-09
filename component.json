@@ -9,7 +9,8 @@
     "backbone": "~0.9.10",
     "handlebars": "~1.0.0-rc.3",
     "underscore": "~1.4.4",
-    "backbone.localStorage": "~1.1.0"
+    "backbone.localStorage": "~1.1.0",
+    "d3": "~3.1.5"
   },
   "devDependencies": {}
 }
